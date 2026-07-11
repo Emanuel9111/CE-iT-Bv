@@ -68,9 +68,13 @@ const audiences = audienceData.map((a) => ({
               </span>
             )}
           </div>
-          {/* Overlay */}
+          {/* Overlay — verdiept subtiel bij hover */}
           <div
             class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/25 to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-ink-950/60 via-ink-950/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             aria-hidden="true"
           />
           {/* Inhoud */}
@@ -87,7 +91,9 @@ const audiences = audienceData.map((a) => ({
               {audience.benefit}
             </p>
             <p class="mt-3 inline-flex items-center gap-2 text-[14px] font-medium text-white">
-              {audience.cta}
+              <span class="bg-gradient-to-r from-white to-white bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+                {audience.cta}
+              </span>
               <span
                 class="transition-transform duration-200 group-hover:translate-x-[3px]"
                 aria-hidden="true"

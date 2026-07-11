@@ -1,15 +1,23 @@
 ---
 /**
- * Hero-visual: gebouwrender (AI-concept, aangeleverd door Emanuel) +
- * genummerde labels rechts. Verwacht bestand:
- *   /public/images/hero-building.png
- * Ontbreekt het bestand, dan toont dit blok een duidelijke plaatshouder.
+ * Hero-visual: gebouwrender + gesynchroniseerde netwerkanimatie
+ * (feedbackronde: premium, subtiel, UniFi-gevoel — geen flashy effecten).
  *
- * (De volledig geanimeerde SVG-variant staat nog in
- *  NetworkBuildingVisual.astro — één import wisselen om terug te gaan.)
+ * Tijdlijn bij scroll-in (allemaal CSS, gestuurd door één .play-klasse):
+ *   1. gebouw: fade + upward reveal
+ *   2. fiber komt binnen (lijn onderaan) → label 01
+ *   3. rack krijgt zachte teal glow → label 02
+ *   4. backbone tekent zich omhoog + aftakkingen per verdieping → label 03
+ *   5. AP's rimpelen één voor één (eindige ripple, geen continue puls) → label 04
+ *   6. monitoring-status verschijnt → label 05
+ *
+ * - prefers-reduced-motion: alles direct zichtbaar, geen animatie
+ * - mobiel (<640px): lijnen uit, alleen reveal + ripples (licht)
+ * - Bestand ontbreekt → nette plaatshouder, geen animatie
  */
 import fs from 'node:fs';
 import path from 'node:path';
+
 const labels = [
   { nr: '01', label: 'Internet', sub: 'Glasvezelverbinding' },
   {
@@ -17,16 +25,8 @@ const labels = [
     label: 'Gateway & firewall',
     sub: 'Beveiligt en verdeelt het netwerk',
   },
-  {
-    nr: '03',
-    label: 'Bekabeling',
-    sub: 'Structuurkabeling in het gebouw',
-  },
-  {
-    nr: '04',
-    label: 'Access Points',
-    sub: 'Wifi op elke verdieping',
-  },
+  { nr: '03', label: 'Bekabeling', sub: 'Structuurkabeling in het gebouw' },
+  { nr: '04', label: 'Access Points', sub: 'Wifi op elke verdieping' },
   {
     nr: '05',
     label: 'Beheer & monitoring',
@@ -34,26 +34,133 @@ const labels = [
   },
 ];
 
+// Ankers gemeten op de render (1200×1400): AP's per verdieping + verdieping-y's
+const aps = [
+  { x: 565, y: 135 },
+  { x: 568, y: 388 },
+  { x: 556, y: 641 },
+  { x: 565, y: 885 },
+];
+const floorYs = [150, 400, 652, 897];
+
 const exists = fs.existsSync(
   path.join(process.cwd(), 'public', 'images', 'hero-building.png')
 );
 const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
 ---
 
-<div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-  <div
-    class="relative flex items-center justify-center overflow-hidden rounded-xl"
-    style="aspect-ratio: 6/7;"
-  >
+<div class="hbi grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center" id="hero-visual">
+  <div class="relative overflow-hidden rounded-xl" style="aspect-ratio: 6/7;">
     {
       exists ? (
-        <img
-          src={src}
-          alt="Doorsnede van een gebouw waarin het CE-iT netwerk zichtbaar is: glasvezel komt binnen, bekabeling loopt naar elke verdieping en access points verzorgen wifi, beheerd op afstand."
-          class="h-full w-full object-contain"
-          loading="eager"
-          decoding="async"
-        />
+        <>
+          <img
+            class="hbi-img h-full w-full object-contain"
+            src={src}
+            alt="Doorsnede van een gebouw waarin het CE-iT netwerk zichtbaar is: glasvezel komt binnen, bekabeling loopt naar elke verdieping en access points verzorgen wifi, beheerd op afstand."
+            loading="eager"
+            decoding="async"
+          />
+          <svg
+            class="hbi-overlay pointer-events-none absolute inset-0 h-full w-full"
+            viewBox="0 0 1200 1400"
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient id="rack-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#2fc7b7" stop-opacity="0.5" />
+                <stop offset="60%" stop-color="#2fc7b7" stop-opacity="0.16" />
+                <stop offset="100%" stop-color="#2fc7b7" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+
+            <!-- 01 · fiber komt binnen -->
+            <path
+              class="ln ln-fiber"
+              d="M 40 1332 H 495"
+              pathLength="1"
+              fill="none"
+              stroke="#2fc7b7"
+              stroke-width="6"
+              stroke-linecap="round"
+            ></path>
+
+            <!-- 02 · rack glow -->
+            <ellipse
+              class="glow"
+              cx="575"
+              cy="1225"
+              rx="150"
+              ry="175"
+              fill="url(#rack-glow)"
+            ></ellipse>
+
+            <!-- 03 · backbone omhoog + aftakkingen -->
+            <path
+              class="ln ln-riser"
+              d="M 730 1265 V 148"
+              pathLength="1"
+              fill="none"
+              stroke="#2fc7b7"
+              stroke-width="5"
+              stroke-linecap="round"
+            ></path>
+            {
+              floorYs.map((y, i) => (
+                <>
+                  <path
+                    class={`ln ln-branch br-${i}`}
+                    d={`M 730 ${y} H 590`}
+                    pathLength="1"
+                    fill="none"
+                    stroke="#2fc7b7"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    class={`ln ln-branch br-${i}`}
+                    d={`M 730 ${y} H 945`}
+                    pathLength="1"
+                    fill="none"
+                    stroke="#2fc7b7"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                </>
+              ))
+            }
+
+            <!-- 04 · AP-ripples (eindig, 2 ringen per AP) -->
+            {
+              aps.map((ap, i) => (
+                <>
+                  <circle
+                    class={`ripple rp-${i}`}
+                    cx={ap.x}
+                    cy={ap.y}
+                    r="26"
+                    fill="none"
+                    stroke="#2fc7b7"
+                    stroke-width="3"
+                  />
+                  <circle
+                    class={`ripple ripple-late rp-${i}`}
+                    cx={ap.x}
+                    cy={ap.y}
+                    r="26"
+                    fill="none"
+                    stroke="#2fc7b7"
+                    stroke-width="2.5"
+                  />
+                </>
+              ))
+            }
+
+            <!-- 05 · monitoring-status op het rack -->
+            <circle class="status" cx="652" cy="1148" r="7" fill="#2fc7b7"
+            ></circle>
+          </svg>
+        </>
       ) : (
         <span class="absolute inset-0 flex items-center justify-center rounded-xl border border-dashed border-line bg-paper-50 px-8 text-center font-mono text-[12px] text-ink-500">
           [RENDER: gebouw &rarr; /public/images/hero-building.png]
@@ -63,20 +170,20 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
   </div>
 
   <ol
-    class="flex flex-wrap gap-x-6 gap-y-3 lg:flex-col lg:gap-4"
+    class="hbi-labels flex flex-wrap gap-x-6 gap-y-3 lg:flex-col lg:gap-4"
     aria-label="Onderdelen van het netwerk"
   >
     {
-      labels.map((item) => (
-        <li class="flex items-center gap-3">
+      labels.map((item, i) => (
+        <li class={`hbi-label lb-${i} flex items-center gap-3`}>
           <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-teal-500/40 font-mono text-[11px] font-medium text-teal-600"
+            class="hbi-badge flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-teal-500/40 font-mono text-[11px] font-medium text-teal-600"
             aria-hidden="true"
           >
             {item.nr}
           </span>
           <span>
-            <span class="block text-[14px] font-medium text-ink-950">
+            <span class="hbi-title block text-[14px] font-medium text-ink-950">
               {item.label}
             </span>
             <span class="block text-[12px] leading-snug text-ink-500">
@@ -88,3 +195,234 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
     }
   </ol>
 </div>
+
+<style>
+  /* ====== ruststand: alles zichtbaar (geen JS / reduced motion) ====== */
+  .hbi-overlay .ln {
+    opacity: 0.4;
+  }
+  .hbi-overlay .ripple {
+    opacity: 0;
+  }
+  .hbi-overlay .glow {
+    opacity: 0.7;
+  }
+  .hbi-overlay .status {
+    opacity: 0.9;
+  }
+
+  /* ====== voorbereid (JS aanwezig, motion oké) ====== */
+  .hbi.ready .hbi-img {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  .hbi.ready .ln {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0.5;
+  }
+  .hbi.ready .glow,
+  .hbi.ready .status {
+    opacity: 0;
+  }
+  .hbi.ready .hbi-badge {
+    transition: none;
+  }
+  .hbi.ready .hbi-title {
+    color: var(--color-ink-500);
+  }
+
+  /* ====== afspelen ====== */
+  .hbi.play .hbi-img {
+    animation: hbi-reveal 0.9s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+  }
+  .hbi.play .ln-fiber {
+    animation: hbi-draw 0.65s ease-out forwards;
+    animation-delay: 0.8s;
+  }
+  .hbi.play .glow {
+    animation: hbi-glow 2.2s ease-out forwards;
+    animation-delay: 1.45s;
+  }
+  .hbi.play .ln-riser {
+    animation: hbi-draw 1.15s cubic-bezier(0.4, 0, 0.3, 1) forwards;
+    animation-delay: 2s;
+  }
+  .hbi.play .br-3 {
+    animation: hbi-draw 0.4s ease-out forwards;
+    animation-delay: 2.5s;
+  }
+  .hbi.play .br-2 {
+    animation: hbi-draw 0.4s ease-out forwards;
+    animation-delay: 2.7s;
+  }
+  .hbi.play .br-1 {
+    animation: hbi-draw 0.4s ease-out forwards;
+    animation-delay: 2.9s;
+  }
+  .hbi.play .br-0 {
+    animation: hbi-draw 0.4s ease-out forwards;
+    animation-delay: 3.1s;
+  }
+  .hbi.play .rp-3 {
+    animation: hbi-ripple 1.1s ease-out forwards;
+    animation-delay: 3s;
+  }
+  .hbi.play .rp-2 {
+    animation: hbi-ripple 1.1s ease-out forwards;
+    animation-delay: 3.2s;
+  }
+  .hbi.play .rp-1 {
+    animation: hbi-ripple 1.1s ease-out forwards;
+    animation-delay: 3.4s;
+  }
+  .hbi.play .rp-0 {
+    animation: hbi-ripple 1.1s ease-out forwards;
+    animation-delay: 3.6s;
+  }
+  .hbi.play .ripple-late {
+    animation-duration: 1.3s !important;
+  }
+  .hbi.play .rp-3.ripple-late { animation-delay: 3.25s; }
+  .hbi.play .rp-2.ripple-late { animation-delay: 3.45s; }
+  .hbi.play .rp-1.ripple-late { animation-delay: 3.65s; }
+  .hbi.play .rp-0.ripple-late { animation-delay: 3.85s; }
+  .hbi.play .status {
+    animation: hbi-status 1.6s ease-out forwards;
+    animation-delay: 4.3s;
+  }
+
+  /* labels: badge vult zich, titel wordt sterker — gesynchroniseerd */
+  .hbi.play .lb-0 .hbi-badge { animation: hbi-badge 0.5s ease-out forwards; animation-delay: 0.85s; }
+  .hbi.play .lb-0 .hbi-title { animation: hbi-title 0.5s ease-out forwards; animation-delay: 0.85s; }
+  .hbi.play .lb-1 .hbi-badge { animation: hbi-badge 0.5s ease-out forwards; animation-delay: 1.5s; }
+  .hbi.play .lb-1 .hbi-title { animation: hbi-title 0.5s ease-out forwards; animation-delay: 1.5s; }
+  .hbi.play .lb-2 .hbi-badge { animation: hbi-badge 0.5s ease-out forwards; animation-delay: 2.05s; }
+  .hbi.play .lb-2 .hbi-title { animation: hbi-title 0.5s ease-out forwards; animation-delay: 2.05s; }
+  .hbi.play .lb-3 .hbi-badge { animation: hbi-badge 0.5s ease-out forwards; animation-delay: 3.05s; }
+  .hbi.play .lb-3 .hbi-title { animation: hbi-title 0.5s ease-out forwards; animation-delay: 3.05s; }
+  .hbi.play .lb-4 .hbi-badge { animation: hbi-badge 0.5s ease-out forwards; animation-delay: 4.35s; }
+  .hbi.play .lb-4 .hbi-title { animation: hbi-title 0.5s ease-out forwards; animation-delay: 4.35s; }
+
+  @keyframes hbi-reveal {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes hbi-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes hbi-glow {
+    0% { opacity: 0; }
+    45% { opacity: 1; }
+    70% { opacity: 0.55; }
+    100% { opacity: 0.75; }
+  }
+  @keyframes hbi-ripple {
+    0% {
+      opacity: 0;
+      transform: scale(0.55);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    25% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+  }
+  @keyframes hbi-status {
+    0% { opacity: 0; }
+    35% { opacity: 1; }
+    60% { opacity: 0.4; }
+    100% { opacity: 0.9; }
+  }
+  @keyframes hbi-badge {
+    to {
+      background: var(--color-teal-600);
+      border-color: var(--color-teal-600);
+      color: var(--color-white);
+    }
+  }
+  @keyframes hbi-title {
+    to {
+      color: var(--color-ink-950);
+    }
+  }
+
+  /* mobiel: lichter — geen lijnwerk, wel reveal + ripples */
+  @media (max-width: 639px) {
+    .hbi-overlay .ln,
+    .hbi-overlay .glow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hbi.ready .hbi-img,
+    .hbi.play .hbi-img {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+    .hbi.ready .ln,
+    .hbi.play .ln {
+      stroke-dashoffset: 0;
+      animation: none;
+      opacity: 0.4;
+    }
+    .hbi.ready .glow,
+    .hbi.play .glow {
+      opacity: 0.7;
+      animation: none;
+    }
+    .hbi.ready .status,
+    .hbi.play .status {
+      opacity: 0.9;
+      animation: none;
+    }
+    .hbi.play .ripple {
+      animation: none;
+      opacity: 0;
+    }
+    .hbi.ready .hbi-title,
+    .hbi.play .hbi-title {
+      color: var(--color-ink-950);
+      animation: none;
+    }
+    .hbi.play .hbi-badge {
+      animation: none;
+      background: var(--color-teal-600);
+      border-color: var(--color-teal-600);
+      color: var(--color-white);
+    }
+  }
+</style>
+
+<script>
+  const root = document.getElementById('hero-visual');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (root && !reduced && 'IntersectionObserver' in window) {
+    root.classList.add('ready');
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            root.classList.add('play');
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(root);
+  }
+</script>

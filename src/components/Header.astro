@@ -24,15 +24,16 @@ const links = [
     class="mx-auto flex h-[78px] w-full max-w-6xl items-center justify-between gap-6 px-6 transition-[height] duration-200"
     aria-label="Hoofdnavigatie"
   >
-    <a href="#top" class="flex flex-col leading-none">
-      <span
-        class="font-display text-[20px] font-semibold tracking-tight text-ink-950"
-        >{site.shortName}</span
-      >
-      <span
-        class="mt-0.5 font-mono text-[9px] uppercase tracking-[0.24em] text-ink-500"
-        >Netwerkbeheer</span
-      >
+    <a href="#top" class="flex items-center" aria-label="CE-iT — naar boven">
+      <img
+        src={`${import.meta.env.BASE_URL}images/logo/ce-it-logo-wordmark.png`}
+        alt="CE-iT"
+        class="h-7 w-auto md:h-8"
+        width="2000"
+        height="625"
+        loading="eager"
+        decoding="async"
+      />
     </a>
 
     <ul class="hidden items-center gap-6 lg:flex">
