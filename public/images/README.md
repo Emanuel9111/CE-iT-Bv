@@ -15,11 +15,11 @@ GEEN stockfoto's (zie docs/01-DESIGN-BRIEF.md §8). Verwachte bestanden (v2):
 | `unifi-gateway.png` | UniFi gateway (eigen foto of officieel beeld met licentie) | UniFi-sectie |
 | `unifi-switch.png` | UniFi switch | UniFi-sectie |
 | `unifi-ap.png` | UniFi access point | UniFi-sectie |
-| `werkwijze-01-analyse.jpg` | gebouw/plan/inspectie | Werkwijze stap 01 |
-| `werkwijze-02-bekabeling.jpg` | gestructureerde bekabeling | Werkwijze stap 02 |
-| `werkwijze-03-apparatuur.jpg` | gateway/switch/rack | Werkwijze stap 03 |
-| `werkwijze-04-wifi.jpg` | AP aan plafond | Werkwijze stap 04 |
-| `werkwijze-05-beheer.jpg` | dashboard/monitoring | Werkwijze stap 05 |
+| `step-analyse.png` | gebouw/plan/inspectie | Werkwijze stap 01 |
+| `step-bekabeling.png` | gestructureerde bekabeling | Werkwijze stap 02 |
+| `step-apparatuur.png` | gateway/switch/rack | Werkwijze stap 03 |
+| `step-wifi.png` | AP aan plafond | Werkwijze stap 04 |
+| `step-beheer.png` | dashboard/monitoring | Werkwijze stap 05 |
 | `logo/ce-it-logo-full.png` | origineel logo met tagline (uit CE-it-logo.pdf) | Footer |
 | `logo/ce-it-logo-wordmark.png` | logo zonder tagline | Header |
 
