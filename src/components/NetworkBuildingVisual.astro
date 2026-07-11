@@ -1,0 +1,494 @@
+---
+/**
+ * Hero-visual: gebouwdoorsnede die als geanimeerde netwerkvisualisatie werkt
+ * (04-ANIMATION-SPEC §2–3). Sequence: internet → gateway → backbone →
+ * aftakkingen → access points → coverage → monitoring.
+ *
+ * - Zonder JS of met prefers-reduced-motion: alles direct zichtbaar.
+ * - Hover/focus op een label highlight de bijbehorende laag.
+ */
+const labels = [
+  { key: 'internet', nr: '01', label: 'Internet', sub: 'Glasvezelverbinding' },
+  {
+    key: 'gateway',
+    nr: '02',
+    label: 'Gateway & firewall',
+    sub: 'Beveiligt en verdeelt het netwerk',
+  },
+  {
+    key: 'cabling',
+    nr: '03',
+    label: 'Bekabeling',
+    sub: 'Structuurkabeling in het gebouw',
+  },
+  {
+    key: 'aps',
+    nr: '04',
+    label: 'Access Points',
+    sub: 'Wifi op elke verdieping',
+  },
+  {
+    key: 'monitor',
+    nr: '05',
+    label: 'Beheer & monitoring',
+    sub: 'Vanop afstand, door CE-iT',
+  },
+];
+
+// Verdiepingen: middelpunten voor aftakking + AP
+const floors = [71, 153, 235, 317];
+---
+
+<div class="nbv" id="network-visual">
+  <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+    <svg
+      viewBox="0 0 440 540"
+      class="w-full"
+      role="img"
+      aria-label="Doorsnede van een gebouw: internet komt binnen via glasvezel, een gateway verdeelt het netwerk via bekabeling naar access points op elke verdieping, en CE-iT monitort alles op afstand."
+    >
+      <!-- Gebouw -->
+      <g class="building">
+        <rect
+          x="90"
+          y="30"
+          width="250"
+          height="410"
+          rx="10"
+          fill="var(--color-paper-25)"
+          stroke="var(--color-line)"
+          stroke-width="1.5"></rect>
+        {
+          [112, 194, 276, 358].map((y) => (
+            <line
+              x1="90"
+              y1={y}
+              x2="340"
+              y2={y}
+              stroke="var(--color-line)"
+              stroke-width="1.2"
+            />
+          ))
+        }
+        <!-- subtiele kamerscheiding -->
+        {
+          floors.map((y) => (
+            <line
+              x1="228"
+              y1={y - 41}
+              x2="228"
+              y2={y + 41}
+              stroke="var(--color-paper-100)"
+              stroke-width="1.2"
+            />
+          ))
+        }
+        <!-- technische ruimte label -->
+        <text
+          x="230"
+          y="425"
+          font-family="var(--font-mono)"
+          font-size="10"
+          fill="var(--color-ink-500)">patchkast</text
+        >
+      </g>
+
+      <!-- 01 Internet / fiber -->
+      <g class="g g-internet">
+        <path
+          d="M 8 470 H 142 V 417"
+          pathLength="1"
+          fill="none"
+          stroke="var(--color-teal-500)"
+          stroke-width="2.5"
+          stroke-linecap="round"></path>
+        <text
+          x="8"
+          y="458"
+          font-family="var(--font-mono)"
+          font-size="11"
+          fill="var(--color-teal-600)">Internet / Fiber</text
+        >
+      </g>
+
+      <!-- 02 Gateway / firewall -->
+      <g class="g g-gateway node">
+        <rect
+          x="118"
+          y="385"
+          width="48"
+          height="32"
+          rx="5"
+          fill="var(--color-white)"
+          stroke="var(--color-teal-500)"
+          stroke-width="2"></rect>
+        <circle cx="156" cy="393" r="3" fill="var(--color-teal-500)"></circle>
+        <line
+          x1="126"
+          y1="405"
+          x2="146"
+          y2="405"
+          stroke="var(--color-line)"
+          stroke-width="2"
+          stroke-linecap="round"></line>
+      </g>
+
+      <!-- 03 Backbone / bekabeling -->
+      <g class="g g-cabling">
+        <path
+          class="backbone"
+          d="M 142 385 V 71"
+          pathLength="1"
+          fill="none"
+          stroke="var(--color-teal-500)"
+          stroke-width="2.5"
+          stroke-linecap="round"></path>
+        {
+          floors.map((y, i) => (
+            <path
+              class={`branch branch-${i}`}
+              d={`M 142 ${y} H 272`}
+              pathLength="1"
+              fill="none"
+              stroke="var(--color-teal-500)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          ))
+        }
+      </g>
+
+      <!-- Coverage rings (bij 04) -->
+      <g class="g g-aps">
+        {
+          floors.map((y, i) => (
+            <circle
+              class={`ring ring-${i}`}
+              cx="284"
+              cy={y}
+              r="30"
+              fill="none"
+              stroke="var(--color-teal-500)"
+              stroke-width="1.5"
+            />
+          ))
+        }
+      </g>
+
+      <!-- 04 Access points -->
+      <g class="g g-aps">
+        {
+          floors.map((y, i) => (
+            <g class={`ap ap-${i} node`}>
+              <circle
+                cx="284"
+                cy={y}
+                r="7"
+                fill="var(--color-white)"
+                stroke="var(--color-teal-500)"
+                stroke-width="2"
+              />
+              <circle cx="284" cy={y} r="2.5" fill="var(--color-teal-500)" />
+            </g>
+          ))
+        }
+      </g>
+
+      <!-- 05 Beheer & monitoring -->
+      <g class="g g-monitor">
+        <path
+          class="monitor-line"
+          d="M 166 401 H 306 V 470 H 348"
+          pathLength="1"
+          fill="none"
+          stroke="var(--color-teal-500)"
+          stroke-width="1.8"
+          stroke-dasharray="4 5"
+          stroke-linecap="round"></path>
+        <g class="monitor-card node">
+          <rect
+            x="348"
+            y="442"
+            width="82"
+            height="56"
+            rx="6"
+            fill="var(--color-white)"
+            stroke="var(--color-teal-500)"
+            stroke-width="2"></rect>
+          <line
+            x1="358"
+            y1="456"
+            x2="420"
+            y2="456"
+            stroke="var(--color-line)"
+            stroke-width="2"
+            stroke-linecap="round"></line>
+          <rect
+            x="358"
+            y="464"
+            width="26"
+            height="6"
+            rx="2"
+            fill="var(--color-teal-100)"></rect>
+          <rect
+            x="358"
+            y="476"
+            width="40"
+            height="6"
+            rx="2"
+            fill="var(--color-teal-100)"></rect>
+          <circle cx="414" cy="472" r="4" fill="var(--color-teal-500)"></circle>
+          <text
+            x="348"
+            y="516"
+            font-family="var(--font-mono)"
+            font-size="11"
+            fill="var(--color-teal-600)">Beheerd door CE-iT</text
+          >
+        </g>
+      </g>
+    </svg>
+
+    <!-- Labels: rechts op desktop, onder de visual op mobiel -->
+    <ol
+      class="flex flex-wrap gap-x-6 gap-y-3 lg:flex-col lg:gap-4"
+      aria-label="Onderdelen van het netwerk"
+    >
+      {
+        labels.map((item) => (
+          <li>
+            <button
+              type="button"
+              class="hl-label group flex items-center gap-3 rounded-md text-left"
+              data-hl={item.key}
+            >
+              <span
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-teal-500/40 font-mono text-[11px] font-medium text-teal-600 transition-colors group-hover:border-teal-500 group-hover:bg-teal-50"
+                aria-hidden="true"
+              >
+                {item.nr}
+              </span>
+              <span>
+                <span class="block text-[14px] font-medium text-ink-950">
+                  {item.label}
+                </span>
+                <span class="block text-[12px] leading-snug text-ink-500">
+                  {item.sub}
+                </span>
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style>
+  /* ===== Hover/focus highlight: dim alles behalve de gekozen laag ===== */
+  .nbv .g {
+    transition: opacity 0.25s ease;
+  }
+  .nbv[data-hl='internet'] .g:not(.g-internet),
+  .nbv[data-hl='gateway'] .g:not(.g-gateway),
+  .nbv[data-hl='cabling'] .g:not(.g-cabling),
+  .nbv[data-hl='aps'] .g:not(.g-aps),
+  .nbv[data-hl='monitor'] .g:not(.g-monitor) {
+    opacity: 0.18;
+  }
+
+  /* ===== Ruststand (geen JS / reduced motion): alles zichtbaar ===== */
+  .nbv .ring {
+    opacity: 0.08;
+  }
+
+  /* ===== Voorbereid op animatie (JS aanwezig, motion oké) ===== */
+  .nbv.ready .g-internet path,
+  .nbv.ready .backbone,
+  .nbv.ready .branch {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .nbv.ready .monitor-line {
+    /* dashed lijn: fade in plaats van draw (dasharray blijft intact) */
+    opacity: 0;
+  }
+  .nbv.ready .node {
+    opacity: 0;
+    transform: translateY(6px);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .nbv.ready .g-gateway {
+    transform: scale(0.98);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .nbv.ready .ring {
+    opacity: 0;
+    transform: scale(0.7);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* ===== Afspelen ===== */
+  .nbv.play .g-internet path {
+    animation: nbv-draw 0.8s ease-out forwards;
+    animation-delay: 0.15s;
+  }
+  .nbv.play .g-gateway {
+    animation: nbv-node 0.45s ease-out forwards;
+    animation-delay: 1s;
+  }
+  .nbv.play .g-gateway.node,
+  .nbv.play .g-gateway .node {
+    animation: nbv-node 0.45s ease-out forwards;
+    animation-delay: 1s;
+  }
+  .nbv.play .backbone {
+    animation: nbv-draw 0.9s ease-in-out forwards;
+    animation-delay: 1.45s;
+  }
+  .nbv.play .branch-0 {
+    animation: nbv-draw 0.4s ease-out forwards;
+    animation-delay: 2.35s;
+  }
+  .nbv.play .branch-1 {
+    animation: nbv-draw 0.4s ease-out forwards;
+    animation-delay: 2.2s;
+  }
+  .nbv.play .branch-2 {
+    animation: nbv-draw 0.4s ease-out forwards;
+    animation-delay: 2.05s;
+  }
+  .nbv.play .branch-3 {
+    animation: nbv-draw 0.4s ease-out forwards;
+    animation-delay: 1.9s;
+  }
+  .nbv.play .ap-3 {
+    animation: nbv-node 0.35s ease-out forwards;
+    animation-delay: 2.35s;
+  }
+  .nbv.play .ap-2 {
+    animation: nbv-node 0.35s ease-out forwards;
+    animation-delay: 2.5s;
+  }
+  .nbv.play .ap-1 {
+    animation: nbv-node 0.35s ease-out forwards;
+    animation-delay: 2.65s;
+  }
+  .nbv.play .ap-0 {
+    animation: nbv-node 0.35s ease-out forwards;
+    animation-delay: 2.8s;
+  }
+  .nbv.play .ring-3 {
+    animation: nbv-ring 0.9s ease-out forwards;
+    animation-delay: 2.7s;
+  }
+  .nbv.play .ring-2 {
+    animation: nbv-ring 0.9s ease-out forwards;
+    animation-delay: 2.85s;
+  }
+  .nbv.play .ring-1 {
+    animation: nbv-ring 0.9s ease-out forwards;
+    animation-delay: 3s;
+  }
+  .nbv.play .ring-0 {
+    animation: nbv-ring 0.9s ease-out forwards;
+    animation-delay: 3.15s;
+  }
+  .nbv.play .monitor-line {
+    animation: nbv-fade 0.55s ease-out forwards;
+    animation-delay: 3.5s;
+  }
+  .nbv.play .monitor-card {
+    animation: nbv-node 0.45s ease-out forwards;
+    animation-delay: 3.9s;
+  }
+
+  @keyframes nbv-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes nbv-node {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes nbv-fade {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes nbv-ring {
+    0% {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    55% {
+      opacity: 0.18;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0.08;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nbv.ready .g-internet path,
+    .nbv.ready .backbone,
+    .nbv.ready .branch {
+      stroke-dashoffset: 0;
+    }
+    .nbv.ready .monitor-line {
+      opacity: 1;
+    }
+    .nbv.ready .node,
+    .nbv.ready .g-gateway {
+      opacity: 1;
+      transform: none;
+    }
+    .nbv.ready .ring {
+      opacity: 0.08;
+      transform: none;
+    }
+    .nbv.play * {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  const root = document.getElementById('network-visual');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (root && !reduced && 'IntersectionObserver' in window) {
+    root.classList.add('ready');
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            root.classList.add('play');
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(root);
+  }
+
+  // Label-hover highlight (desktop; focus werkt ook met toetsenbord)
+  root?.querySelectorAll<HTMLButtonElement>('.hl-label').forEach((btn) => {
+    const key = btn.dataset.hl ?? '';
+    const on = () => root.setAttribute('data-hl', key);
+    const off = () => root.removeAttribute('data-hl');
+    btn.addEventListener('mouseenter', on);
+    btn.addEventListener('mouseleave', off);
+    btn.addEventListener('focus', on);
+    btn.addEventListener('blur', off);
+  });
+</script>

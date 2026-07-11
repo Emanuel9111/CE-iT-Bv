@@ -1,0 +1,89 @@
+---
+import Section from '../components/Section.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import SmartImage from '../components/SmartImage.astro';
+
+/**
+ * Recente projecten — ALLEEN echte projecten van CE-iT (design brief §7G).
+ * Namen, plaatsen en aantallen worden door Emanuel aangeleverd —
+ * NOOIT verzinnen. Tot dan: duidelijke plaatshouders.
+ * Foto's verschijnen automatisch zodra de bestanden in /public/images/ staan.
+ */
+const projects = [
+  {
+    title: '[PROJECT 1 — type + plaats]',
+    chip: '[X kamers]',
+    file: 'project-studenten-01.jpg',
+    label: 'gebouw/installatie',
+  },
+  {
+    title: '[PROJECT 2 — type + plaats]',
+    chip: '[X appartementen]',
+    file: 'project-rack-01.jpg',
+    label: 'patchkast / rack',
+  },
+  {
+    title: '[PROJECT 3 — type + plaats]',
+    chip: '[kantoor]',
+    file: 'project-kmo-01.jpg',
+    label: 'AP-installatie',
+  },
+  {
+    title: '[PROJECT 4 — type + plaats]',
+    chip: '[X kamers]',
+    file: 'project-bekabeling-01.jpg',
+    label: 'bekabeling',
+  },
+];
+---
+
+<Section id="projecten" tone="paper">
+  <div class="reveal flex flex-wrap items-end justify-between gap-4">
+    <div class="max-w-3xl">
+      <Eyebrow>Projecten &amp; installaties</Eyebrow>
+      <h2
+        class="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[34px]"
+      >
+        Recente projecten
+      </h2>
+    </div>
+    <span
+      class="inline-flex items-center gap-2 text-[14px] font-medium text-teal-600/60"
+      title="Projectpagina volgt"
+    >
+      Bekijk alle projecten <span aria-hidden="true">&rarr;</span>
+    </span>
+  </div>
+
+  <p class="reveal mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-600">
+    Geen standaardpakket en geen verborgen infrastructuur. We tonen graag hoe
+    een professioneel netwerk er in de praktijk uitziet — van gebouw tot
+    patchkast en van bekabeling tot access point.
+  </p>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      projects.map((project) => (
+        <figure class="reveal group overflow-hidden rounded-lg border border-line bg-white">
+          <div class="overflow-hidden">
+            <div class="transition-transform duration-300 ease-out group-hover:scale-[1.02]">
+              <SmartImage
+                file={project.file}
+                label={project.label}
+                alt={`Projectfoto: ${project.label}`}
+                aspect="4/3"
+                class="rounded-none border-x-0 border-t-0"
+              />
+            </div>
+          </div>
+          <figcaption class="px-4 py-4">
+            <p class="text-[14px] font-medium text-ink-950">{project.title}</p>
+            <span class="mt-2 inline-block rounded-full border border-line px-2.5 py-0.5 font-mono text-[11px] text-ink-600">
+              {project.chip}
+            </span>
+          </figcaption>
+        </figure>
+      ))
+    }
+  </div>
+</Section>

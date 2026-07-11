@@ -1,0 +1,36 @@
+---
+/**
+ * Duidelijke plaatshouder voor ECHTE beelden (geen stock — design brief §8).
+ * Vervangen door bestanden in /public/images/ zodra Emanuel ze aanlevert.
+ */
+interface Props {
+  label: string;
+  kind?: 'foto' | 'video' | 'product';
+  aspect?: string; // bv. "16/9", "4/3", "3/4"
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const {
+  label,
+  kind = 'foto',
+  aspect = '16/9',
+  tone = 'light',
+  class: className = '',
+} = Astro.props;
+
+const tones = {
+  light: 'border-line bg-paper-100 text-ink-500',
+  dark: 'border-dark-line bg-dark-900 text-ink-500',
+};
+---
+
+<figure
+  class={`flex items-center justify-center overflow-hidden rounded-lg border border-dashed ${tones[tone]} ${className}`}
+  style={`aspect-ratio: ${aspect};`}
+  role="img"
+  aria-label={`Plaatshouder voor echte ${kind}: ${label}`}
+>
+  <figcaption class="px-6 text-center font-mono text-[12px]">
+    [ECHTE {kind.toUpperCase()}: {label}]
+  </figcaption>
+</figure>

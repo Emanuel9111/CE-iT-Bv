@@ -1,0 +1,18 @@
+---
+/**
+ * Klein uppercase-label boven een sectiekop. Mono, letter-spacing.
+ * `tone="dark"` = lichtere tint, leesbaar op donkere secties.
+ */
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { tone = 'light', class: className = '' } = Astro.props;
+const color = tone === 'dark' ? 'text-teal-100' : 'text-teal-600';
+---
+
+<p
+  class={`font-mono text-[13px] font-medium uppercase tracking-[0.16em] ${color} ${className}`}
+>
+  <slot />
+</p>

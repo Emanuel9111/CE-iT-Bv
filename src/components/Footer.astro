@@ -1,0 +1,223 @@
+---
+import Todo from './Todo.astro';
+import { site } from '../data/site';
+
+const columns = [
+  {
+    title: 'Oplossingen',
+    links: [
+      { label: 'Netwerk & wifi', href: '#oplossingen' },
+      { label: 'Bekabeling', href: '#oplossingen' },
+      { label: 'Netwerkbeheer', href: '#oplossingen' },
+      { label: 'Monitoring', href: '#oplossingen' },
+    ],
+  },
+  {
+    title: 'Voor wie',
+    links: [
+      { label: 'Studentenhuisvesting', href: '#voor-wie' },
+      { label: 'KMO’s & bedrijven', href: '#voor-wie' },
+      { label: 'Appartementsgebouwen', href: '#voor-wie' },
+    ],
+  },
+  {
+    title: 'Over CE-iT',
+    links: [
+      { label: 'Over ons', href: '#over' },
+      { label: 'Projecten', href: '#projecten' },
+      { label: 'Werkwijze', href: '#werkwijze' },
+      { label: 'Contact', href: '#contact' },
+    ],
+  },
+];
+---
+
+<footer class="border-t border-line bg-white">
+  <div
+    class="mx-auto grid w-full max-w-6xl gap-12 px-6 py-16 md:grid-cols-[2fr_1fr_1fr_1fr_1.2fr]"
+  >
+    <div>
+      <p class="flex flex-col">
+        <span
+          class="font-display text-xl font-semibold tracking-tight text-ink-950"
+          >{site.shortName}</span
+        >
+        <span
+          class="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-500"
+          >Netwerkbeheer</span
+        >
+      </p>
+      <p class="mt-5 max-w-xs text-[13.5px] leading-relaxed text-ink-600">
+        Netwerk, wifi en bekabeling voor studentengebouwen en KMO’s.
+        Installatie, optimalisatie en beheer.
+      </p>
+      <ul class="mt-5 flex gap-3">
+        <li>
+          {
+            site.linkedin ? (
+              <a
+                href={site.linkedin}
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-teal-500 hover:text-teal-600"
+              >
+                <span class="font-mono text-[11px] font-medium">in</span>
+              </a>
+            ) : (
+              <span
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-line text-ink-500"
+                title="LinkedIn-URL nog aan te vullen"
+              >
+                <span class="font-mono text-[11px]">in</span>
+              </span>
+            )
+          }
+        </li>
+        <li>
+          {
+            site.email ? (
+              <a
+                href={`mailto:${site.email}`}
+                aria-label="E-mail"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-teal-500 hover:text-teal-600"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="5" width="14" height="11" rx="1.5" />
+                  <path d="m3.5 6 6.5 5 6.5-5" />
+                </svg>
+              </a>
+            ) : (
+              <span
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-line text-ink-500"
+                title="E-mail nog aan te vullen"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="5" width="14" height="11" rx="1.5" />
+                  <path d="m3.5 6 6.5 5 6.5-5" />
+                </svg>
+              </span>
+            )
+          }
+        </li>
+      </ul>
+    </div>
+
+    {
+      columns.map((col) => (
+        <nav aria-label={col.title}>
+          <p class="text-[14px] font-semibold text-ink-950">{col.title}</p>
+          <ul class="mt-4 space-y-2.5">
+            {col.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-[13.5px] text-ink-600 transition-colors hover:text-teal-600"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <div>
+      <p class="text-[14px] font-semibold text-ink-950">Contact</p>
+      <ul class="mt-4 space-y-3 text-[13.5px] text-ink-600">
+        <li class="flex items-center gap-2.5">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            class="h-4 w-4 shrink-0 text-teal-600"
+            aria-hidden="true"
+          >
+            <path
+              d="M4 3.5h3l1.5 4-2 1.5a11 11 0 0 0 4.5 4.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C8.3 17 3 11.7 2.5 5.1A1.5 1.5 0 0 1 4 3.5Z"
+            ></path>
+          </svg>
+          {
+            site.phone ? (
+              <a
+                href={`tel:${site.phone.replace(/\s/g, '')}`}
+                class="hover:text-teal-600"
+              >
+                {site.phone}
+              </a>
+            ) : (
+              <Todo label="TELEFOON" />
+            )
+          }
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            class="h-4 w-4 shrink-0 text-teal-600"
+            aria-hidden="true"
+          >
+            <rect x="2.5" y="4.5" width="15" height="11" rx="1.5"></rect>
+            <path d="m3 6 7 5 7-5"></path>
+          </svg>
+          {
+            site.email ? (
+              <a href={`mailto:${site.email}`} class="hover:text-teal-600">
+                {site.email}
+              </a>
+            ) : (
+              <Todo label="E-MAIL" />
+            )
+          }
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            class="h-4 w-4 shrink-0 text-teal-600"
+            aria-hidden="true"
+          >
+            <path d="M10 18s-6-5.2-6-9.5a6 6 0 1 1 12 0C16 12.8 10 18 10 18Z"
+            ></path>
+            <circle cx="10" cy="8.5" r="2"></circle>
+          </svg>
+          {site.region ? site.region : <Todo label="REGIO" />}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-line">
+    <div
+      class="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-5 text-[12.5px] text-ink-500 md:flex-row md:items-center md:justify-between"
+    >
+      <p>
+        © {site.shortName} Netwerkbeheer · {site.shortName} BV · {site.address}
+        · BTW {site.btw}
+      </p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-1">
+        <li><span title="Pagina volgt">Privacyverklaring</span></li>
+        <li><span title="Pagina volgt">Cookiebeleid</span></li>
+      </ul>
+    </div>
+  </div>
+</footer>

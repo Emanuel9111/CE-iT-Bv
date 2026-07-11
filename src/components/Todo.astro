@@ -1,0 +1,16 @@
+---
+/**
+ * Zichtbare plaatshouder voor gegevens die Emanuel nog moet aanleveren
+ * (telefoon, e-mail, regio, …). Valt op, zodat hij nooit per ongeluk
+ * onopgemerkt op de live site blijft staan.
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<span
+  class="font-mono text-[0.85em] text-ink-500 underline decoration-dashed underline-offset-4"
+  title="Nog aan te vullen">[{label}]</span
+>

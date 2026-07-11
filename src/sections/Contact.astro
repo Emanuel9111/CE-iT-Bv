@@ -1,0 +1,154 @@
+---
+import Section from '../components/Section.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+import { site } from '../data/site';
+
+/**
+ * Contactformulier via Web3Forms (https://web3forms.com — gratis).
+ * Actief zodra `site.web3formsKey` is ingevuld in src/data/site.ts;
+ * tot dan toont het formulier een duidelijke notitie.
+ */
+const formActive = Boolean(site.web3formsKey);
+
+const fields = [
+  { id: 'naam', label: 'Naam', type: 'text', autocomplete: 'name', required: true },
+  {
+    id: 'bedrijf',
+    label: 'Bedrijf / organisatie',
+    type: 'text',
+    autocomplete: 'organization',
+    required: false,
+  },
+  { id: 'email', label: 'E-mail', type: 'email', autocomplete: 'email', required: true },
+  { id: 'telefoon', label: 'Telefoon', type: 'tel', autocomplete: 'tel', required: false },
+];
+
+const buildingTypes = [
+  'Studentenhuisvesting',
+  'Appartementsgebouw',
+  'KMO / kantoor',
+  'Nieuwbouwproject',
+  'Andere',
+];
+
+const inputClasses =
+  'w-full rounded-md border border-line bg-white px-4 py-3 text-[15px] text-ink-950 placeholder:text-ink-500 transition-colors focus:border-teal-500 focus:outline-none';
+---
+
+<Section id="contact">
+  <div class="grid gap-12 md:grid-cols-2 md:gap-16">
+    <div class="reveal">
+      <Eyebrow>Contact</Eyebrow>
+      <h2
+        class="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[34px]"
+      >
+        Vertel ons over uw gebouw of project.
+      </h2>
+      <p class="mt-6 max-w-md text-[16px] leading-relaxed text-ink-600">
+        We bekijken wat er nodig is en stellen een duidelijke aanpak voor.
+        Vrijblijvend en concreet.
+      </p>
+    </div>
+
+    <form
+      class="reveal space-y-5"
+      method="POST"
+      action={formActive ? 'https://api.web3forms.com/submit' : '#'}
+    >
+      {formActive && (
+        <>
+          <input type="hidden" name="access_key" value={site.web3formsKey} />
+          <input
+            type="hidden"
+            name="subject"
+            value="Nieuwe aanvraag via ce-it-website"
+          />
+          {/* Honeypot tegen spam — onzichtbaar voor mensen */}
+          <input
+            type="checkbox"
+            name="botcheck"
+            class="hidden"
+            style="display:none"
+            tabindex="-1"
+            aria-hidden="true"
+          />
+        </>
+      )}
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        {
+          fields.map((field) => (
+            <div>
+              <label
+                for={field.id}
+                class="mb-1.5 block text-[13px] font-medium text-ink-800"
+              >
+                {field.label}
+              </label>
+              <input
+                id={field.id}
+                name={field.id}
+                type={field.type}
+                autocomplete={field.autocomplete}
+                class={inputClasses}
+                required={field.required}
+              />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label
+            for="type-gebouw"
+            class="mb-1.5 block text-[13px] font-medium text-ink-800"
+          >
+            Type gebouw
+          </label>
+          <select id="type-gebouw" name="type_gebouw" class={inputClasses}>
+            <option value="">Maak een keuze</option>
+            {buildingTypes.map((type) => <option value={type}>{type}</option>)}
+          </select>
+        </div>
+        <div>
+          <label
+            for="locatie"
+            class="mb-1.5 block text-[13px] font-medium text-ink-800"
+          >
+            Locatie
+          </label>
+          <input
+            id="locatie"
+            name="locatie"
+            type="text"
+            autocomplete="off"
+            class={inputClasses}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="bericht"
+          class="mb-1.5 block text-[13px] font-medium text-ink-800"
+        >
+          Bericht
+        </label>
+        <textarea id="bericht" name="bericht" rows="4" class={inputClasses}
+        ></textarea>
+      </div>
+
+      <Button type="submit" class="w-full sm:w-auto">Verstuur aanvraag</Button>
+      {
+        !formActive && (
+          <p class="font-mono text-[12px] text-ink-500">
+            [FORMULIER NOG NIET ACTIEF — web3formsKey invullen in
+            src/data/site.ts]
+          </p>
+        )
+      }
+    </form>
+  </div>
+</Section>

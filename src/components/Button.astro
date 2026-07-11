@@ -1,0 +1,63 @@
+---
+/**
+ * Knop/link. Primair = teal (het énige accent), secundair = rustige rand.
+ * `arrow` toont een pijl die 3px opschuift bij hover (04-ANIMATION-SPEC §9).
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'md' | 'sm';
+  arrow?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+}
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  arrow = false,
+  type = 'button',
+  class: className = '',
+} = Astro.props;
+
+const base =
+  'group inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors duration-200';
+const sizes = {
+  md: 'px-6 py-3 text-[15px]',
+  sm: 'px-5 py-2.5 text-[14px]',
+};
+const variants = {
+  primary: 'bg-teal-600 text-white hover:bg-teal-500',
+  secondary:
+    'border border-line bg-white text-ink-800 hover:border-teal-500 hover:bg-teal-50',
+};
+const classes = `${base} ${sizes[size]} ${variants[variant]} ${className}`;
+---
+
+{
+  href ? (
+    <a href={href} class={classes}>
+      <slot />
+      {arrow && (
+        <span
+          class="transition-transform duration-200 group-hover:translate-x-[3px]"
+          aria-hidden="true"
+        >
+          &rarr;
+        </span>
+      )}
+    </a>
+  ) : (
+    <button type={type} class={classes}>
+      <slot />
+      {arrow && (
+        <span
+          class="transition-transform duration-200 group-hover:translate-x-[3px]"
+          aria-hidden="true"
+        >
+          &rarr;
+        </span>
+      )}
+    </button>
+  )
+}

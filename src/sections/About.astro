@@ -1,0 +1,48 @@
+---
+import Section from '../components/Section.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import SmartImage from '../components/SmartImage.astro';
+import Todo from '../components/Todo.astro';
+import { site } from '../data/site';
+---
+
+<Section id="over" tone="paper">
+  <div class="grid items-start gap-12 md:grid-cols-[3fr_2fr] md:gap-14">
+    <div class="reveal">
+      <Eyebrow>Lokaal en technisch betrokken</Eyebrow>
+      <h2
+        class="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[34px]"
+      >
+        Geen callcenter. Eén partner die uw netwerk kent.
+      </h2>
+      <p class="mt-6 text-[16px] leading-relaxed text-ink-600">
+        CE-iT combineert praktijkervaring in glasvezel, bekabeling en
+        netwerkinfrastructuur met moderne netwerkoplossingen. We werken
+        lokaal, communiceren direct en blijven betrokken nadat de installatie
+        is afgerond.
+      </p>
+      <p class="mt-4 text-[16px] leading-relaxed text-ink-600">
+        {
+          site.yearsExperience ? (
+            `${site.yearsExperience} jaar terreinervaring`
+          ) : (
+            <>
+              <Todo label="X" /> jaar terreinervaring
+            </>
+          )
+        } op het Belgische FTTH-net, actief in {
+          site.region ? site.region : <Todo label="REGIO" />
+        }.
+      </p>
+    </div>
+
+    <div class="reveal">
+      <SmartImage
+        file="emanuel-terrein.jpg"
+        label="Emanuel / CE-iT op locatie"
+        alt="Emanuel Costescu van CE-iT aan het werk op locatie"
+        aspect="4/5"
+      />
+    </div>
+  </div>
+</Section>

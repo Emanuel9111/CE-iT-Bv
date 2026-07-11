@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Fonts — self-hosted via Fontsource (snelheid + privacy) */
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/inter";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* Design tokens v2 — bron: docs/01-DESIGN-BRIEF.md (light & premium, 80/20). */
+@theme {
+  /* Light surfaces */
+  --color-white: #ffffff;
+  --color-paper-25: #fbfcfc;
+  --color-paper-50: #f5f8f8;
+  --color-paper-100: #edf2f2;
+  --color-line: #dfe7e7;
+
+  /* Ink / text */
+  --color-ink-950: #0a1620;
+  --color-ink-900: #0f1922;
+  --color-ink-800: #1a2730;
+  --color-ink-600: #52616b;
+  --color-ink-500: #6f7e87;
+
+  /* Accent — teal is de ENIGE accentkleur */
+  --color-teal-500: #168c84;
+  --color-teal-600: #0f746e;
+  --color-teal-100: #dff3f1;
+  --color-teal-50: #f1fbfa;
+
+  /* Dark sections (max ~20% van de pagina) */
+  --color-dark-950: #08141d;
+  --color-dark-900: #0d1d27;
+  --color-dark-line: #20323c;
+
+  --font-display: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-white font-body text-ink-800 antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: var(--color-teal-500);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* Scroll-reveal: één standaard reveal (zie 04-ANIMATION-SPEC §10).
+   Alleen actief als JS aanwezig is (html.js) — zonder JS blijft alles zichtbaar. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.6, 0.2, 1),
+    transform 0.55s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+html.js .reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

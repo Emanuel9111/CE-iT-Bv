@@ -1,0 +1,25 @@
+---
+/**
+ * Sectie-wrapper: consistente verticale ruimte + toon.
+ * De site is 80% light / 20% dark (design brief §4) —
+ * gebruik `tone="dark"` alleen voor UniFi en eventueel één andere sectie.
+ */
+interface Props {
+  id?: string;
+  tone?: 'white' | 'paper' | 'dark';
+  class?: string;
+}
+const { id, tone = 'white', class: className = '' } = Astro.props;
+
+const tones = {
+  white: 'bg-white',
+  paper: 'bg-paper-50',
+  dark: 'bg-dark-950 text-paper-100',
+};
+---
+
+<section id={id} class={`${tones[tone]} ${className}`}>
+  <div class="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
+    <slot />
+  </div>
+</section>

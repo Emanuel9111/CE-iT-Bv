@@ -1,0 +1,90 @@
+---
+/**
+ * Hero-visual: gebouwrender (AI-concept, aangeleverd door Emanuel) +
+ * genummerde labels rechts. Verwacht bestand:
+ *   /public/images/hero-building.png
+ * Ontbreekt het bestand, dan toont dit blok een duidelijke plaatshouder.
+ *
+ * (De volledig geanimeerde SVG-variant staat nog in
+ *  NetworkBuildingVisual.astro — één import wisselen om terug te gaan.)
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+const labels = [
+  { nr: '01', label: 'Internet', sub: 'Glasvezelverbinding' },
+  {
+    nr: '02',
+    label: 'Gateway & firewall',
+    sub: 'Beveiligt en verdeelt het netwerk',
+  },
+  {
+    nr: '03',
+    label: 'Bekabeling',
+    sub: 'Structuurkabeling in het gebouw',
+  },
+  {
+    nr: '04',
+    label: 'Access Points',
+    sub: 'Wifi op elke verdieping',
+  },
+  {
+    nr: '05',
+    label: 'Beheer & monitoring',
+    sub: 'Vanop afstand, door CE-iT',
+  },
+];
+
+const exists = fs.existsSync(
+  path.join(process.cwd(), 'public', 'images', 'hero-building.png')
+);
+const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
+---
+
+<div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+  <div
+    class="relative flex items-center justify-center overflow-hidden rounded-xl"
+    style="aspect-ratio: 6/7;"
+  >
+    {
+      exists ? (
+        <img
+          src={src}
+          alt="Doorsnede van een gebouw waarin het CE-iT netwerk zichtbaar is: glasvezel komt binnen, bekabeling loopt naar elke verdieping en access points verzorgen wifi, beheerd op afstand."
+          class="h-full w-full object-contain"
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <span class="absolute inset-0 flex items-center justify-center rounded-xl border border-dashed border-line bg-paper-50 px-8 text-center font-mono text-[12px] text-ink-500">
+          [RENDER: gebouw &rarr; /public/images/hero-building.png]
+        </span>
+      )
+    }
+  </div>
+
+  <ol
+    class="flex flex-wrap gap-x-6 gap-y-3 lg:flex-col lg:gap-4"
+    aria-label="Onderdelen van het netwerk"
+  >
+    {
+      labels.map((item) => (
+        <li class="flex items-center gap-3">
+          <span
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-teal-500/40 font-mono text-[11px] font-medium text-teal-600"
+            aria-hidden="true"
+          >
+            {item.nr}
+          </span>
+          <span>
+            <span class="block text-[14px] font-medium text-ink-950">
+              {item.label}
+            </span>
+            <span class="block text-[12px] leading-snug text-ink-500">
+              {item.sub}
+            </span>
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</div>

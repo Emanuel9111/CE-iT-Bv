@@ -1,0 +1,77 @@
+---
+import Eyebrow from '../components/Eyebrow.astro';
+import Button from '../components/Button.astro';
+import HeroBuildingImage from '../components/HeroBuildingImage.astro';
+
+const trustItems = [
+  {
+    title: 'Eén contactpunt',
+    text: 'directe communicatie',
+    icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2a6 6 0 0 1 6 6c0 1.4-.5 2.7-1.3 3.7L10 18l-4.7-6.3A6 6 0 0 1 10 2Z"/><circle cx="10" cy="8" r="2.2"/></svg>',
+  },
+  {
+    title: 'Professioneel',
+    text: 'geen consumentenoplossingen',
+    icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 3 5v5c0 4.4 3 7.4 7 8 4-.6 7-3.6 7-8V5l-7-3Z"/><path d="m7.2 10 2 2 3.6-4"/></svg>',
+  },
+  {
+    title: 'Schaalbaar',
+    text: 'groeit mee met uw gebouw',
+    icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V9m6 7V4m6 12v-5"/></svg>',
+  },
+  {
+    title: 'Beheer op afstand',
+    text: '24/7 monitoring',
+    icon: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><path d="M10 6v4l2.6 1.6"/></svg>',
+  },
+];
+---
+
+<section id="top" class="bg-white">
+  <div class="mx-auto w-full max-w-6xl px-6 pb-20 pt-12 md:pb-24 md:pt-16">
+    <div class="grid items-center gap-14 lg:grid-cols-[1.02fr_1fr] lg:gap-12">
+      <div>
+        <Eyebrow>Professionele netwerken voor gebouwen en bedrijven</Eyebrow>
+        <h1
+          class="mt-5 font-display text-[36px] font-semibold leading-[1.08] tracking-tight text-ink-950 sm:text-[44px] lg:text-[54px]"
+        >
+          Netwerk, wifi en bekabeling. Van installatie tot
+          <span class="text-teal-600">volledig beheer.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-600">
+          CE-iT ontwerpt, installeert en beheert professionele netwerken voor
+          studentenhuisvesting en KMO’s. Betrouwbaar, veilig en schaalbaar —
+          vandaag en morgen.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <Button href="#oplossingen" arrow>Bekijk oplossingen</Button>
+          <Button href="#contact" variant="secondary">Plan een gesprek</Button>
+        </div>
+
+        <ul class="mt-12 flex flex-wrap gap-x-8 gap-y-5">
+          {
+            trustItems.map((item) => (
+              <li class="flex items-center gap-3">
+                <span
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-teal-100 bg-teal-50 p-2.5 text-teal-600"
+                  aria-hidden="true"
+                  set:html={item.icon}
+                />
+                <span>
+                  <span class="block font-display text-[14px] font-medium text-ink-950">
+                    {item.title}
+                  </span>
+                  <span class="block text-[12.5px] text-ink-500">
+                    {item.text}
+                  </span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <HeroBuildingImage />
+    </div>
+  </div>
+</section>

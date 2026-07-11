@@ -1,0 +1,115 @@
+---
+import SmartImage from '../components/SmartImage.astro';
+
+/**
+ * Dark band "Gebouwd op UniFi technologie" (referentiestijl):
+ * korte intro links, productbeelden rechts.
+ * Productbeelden: eigen foto's van gebruikte apparatuur, of officiële
+ * beelden mits licentie (design brief §8).
+ */
+const products = [
+  { label: 'Cloud Gateway', file: 'unifi-gateway.png' },
+  { label: 'Professional Switches', file: 'unifi-switch.png' },
+  { label: 'Access Points', file: 'unifi-ap.png' },
+];
+---
+
+<section id="technologie" class="bg-dark-950 text-paper-100">
+  <div class="mx-auto w-full max-w-6xl px-6 py-16 md:py-20">
+    <div class="grid items-center gap-10 md:grid-cols-[1.1fr_2fr] md:gap-14">
+      <div class="reveal">
+        <h2
+          class="font-display text-[24px] font-semibold leading-tight tracking-tight text-white md:text-[28px]"
+        >
+          Gebouwd op UniFi technologie
+        </h2>
+        <p class="mt-4 text-[14.5px] leading-relaxed text-paper-100/75">
+          CE-iT werkt met de betrouwbare en schaalbare netwerkoplossingen van
+          Ubiquiti UniFi. Krachtige hardware, centraal beheer en monitoring
+          op afstand. Klaar voor de toekomst.
+        </p>
+        <p class="mt-4 font-mono text-[12px] leading-relaxed text-teal-100/70">
+          Gateway &rarr; Switches &rarr; Bekabeling &rarr; Access Points
+          &rarr; Gebruikers
+        </p>
+        <a
+          href="#contact"
+          class="group mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-teal-100 hover:text-white"
+        >
+          Meer over UniFi
+          <span
+            class="transition-transform duration-200 group-hover:translate-x-[3px]"
+            aria-hidden="true">&rarr;</span
+          >
+        </a>
+      </div>
+
+      <div id="unifi-products" class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        {
+          products.map((product, i) => (
+            <figure class="unifi-product" style={`--i: ${i}`}>
+              <SmartImage
+                file={product.file}
+                kind="product"
+                label={product.label}
+                alt={`UniFi ${product.label}`}
+                aspect="4/3"
+                tone="dark"
+              />
+              <figcaption class="mt-3 text-center font-mono text-[12px] text-paper-100/70">
+                {product.label}
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Producten verschijnen gefaseerd bij scroll-in (04-ANIMATION-SPEC §6) */
+  html.js .unifi-product {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.45s ease-out,
+      transform 0.45s ease-out;
+    transition-delay: calc(var(--i) * 0.15s);
+  }
+  #unifi-products.active .unifi-product {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.js .unifi-product {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const grid = document.getElementById('unifi-products');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (grid) {
+    if (reduced || !('IntersectionObserver' in window)) {
+      grid.classList.add('active');
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              grid.classList.add('active');
+              io.disconnect();
+            }
+          }
+        },
+        { threshold: 0.3 }
+      );
+      io.observe(grid);
+    }
+  }
+</script>

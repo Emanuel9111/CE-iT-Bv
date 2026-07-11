@@ -1,0 +1,57 @@
+---
+/**
+ * Toont de echte afbeelding uit /public/images/ zodra het bestand bestaat;
+ * anders een duidelijke plaatshouder. Zo verschijnen foto's automatisch
+ * van zodra Emanuel ze (met de juiste bestandsnaam) in de map zet.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import PlaceholderImage from './PlaceholderImage.astro';
+
+interface Props {
+  file: string; // bestandsnaam in /public/images/, bv. "kmo-hero.jpg"
+  alt: string;
+  label?: string;
+  kind?: 'foto' | 'video' | 'product';
+  aspect?: string;
+  tone?: 'light' | 'dark';
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+const {
+  file,
+  alt,
+  label = file,
+  kind = 'foto',
+  aspect = '16/9',
+  tone = 'light',
+  class: className = '',
+  loading = 'lazy',
+} = Astro.props;
+
+const exists = fs.existsSync(
+  path.join(process.cwd(), 'public', 'images', file)
+);
+const src = `${import.meta.env.BASE_URL}images/${file}`;
+---
+
+{
+  exists ? (
+    <img
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      class={`w-full rounded-lg object-cover ${className}`}
+      style={`aspect-ratio: ${aspect};`}
+    />
+  ) : (
+    <PlaceholderImage
+      label={`${label} → /images/${file}`}
+      kind={kind}
+      aspect={aspect}
+      tone={tone}
+      class={className}
+    />
+  )
+}
