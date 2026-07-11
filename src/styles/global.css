@@ -22,11 +22,12 @@
   --color-ink-600: #52616b;
   --color-ink-500: #6f7e87;
 
-  /* Accent — teal is de ENIGE accentkleur */
-  --color-teal-500: #168c84;
-  --color-teal-600: #0f746e;
-  --color-teal-100: #dff3f1;
-  --color-teal-50: #f1fbfa;
+  /* Accent — CE-iT merkblauw (#4E98C6, uit het originele logo) is de
+     ENIGE accentkleur; brand-600 voor hover/sterke states. */
+  --color-brand-500: #4e98c6;
+  --color-brand-600: #367daa;
+  --color-brand-100: #dcebf5;
+  --color-brand-50: #f2f8fc;
 
   /* Dark sections (max ~20% van de pagina) */
   --color-dark-950: #08141d;
@@ -55,12 +56,12 @@
   }
 
   ::selection {
-    background: var(--color-teal-500);
+    background: var(--color-brand-500);
     color: var(--color-white);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-teal-600);
+    outline: 2px solid var(--color-brand-600);
     outline-offset: 2px;
     border-radius: 2px;
   }

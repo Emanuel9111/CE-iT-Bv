@@ -49,7 +49,7 @@ const exists = fs.existsSync(
 const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
 ---
 
-<div class="hbi grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center" id="hero-visual">
+<div class="hbi grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-5" id="hero-visual">
   <div class="relative overflow-hidden rounded-xl" style="aspect-ratio: 6/7;">
     {
       exists ? (
@@ -68,20 +68,30 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
           >
             <defs>
               <radialGradient id="rack-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#2fc7b7" stop-opacity="0.5" />
-                <stop offset="60%" stop-color="#2fc7b7" stop-opacity="0.16" />
-                <stop offset="100%" stop-color="#2fc7b7" stop-opacity="0" />
+                <stop offset="0%" stop-color="#4E98C6" stop-opacity="0.5" />
+                <stop offset="60%" stop-color="#4E98C6" stop-opacity="0.16" />
+                <stop offset="100%" stop-color="#4E98C6" stop-opacity="0" />
               </radialGradient>
             </defs>
 
-            <!-- 01 · fiber komt binnen -->
+            <!-- 01 · fiber komt binnen (witte casing eronder = leesbaar
+                 op het drukke render, zonder dure filters) -->
+            <path
+              class="ln ln-fiber casing"
+              d="M 40 1332 H 495"
+              pathLength="1"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="12"
+              stroke-linecap="round"
+            ></path>
             <path
               class="ln ln-fiber"
               d="M 40 1332 H 495"
               pathLength="1"
               fill="none"
-              stroke="#2fc7b7"
-              stroke-width="6"
+              stroke="#4E98C6"
+              stroke-width="8"
               stroke-linecap="round"
             ></path>
 
@@ -95,26 +105,53 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
               fill="url(#rack-glow)"
             ></ellipse>
 
-            <!-- 03 · backbone omhoog + aftakkingen -->
+            <!-- 03 · backbone omhoog + aftakkingen (met witte casing) -->
+            <path
+              class="ln ln-riser casing"
+              d="M 730 1265 V 148"
+              pathLength="1"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="11"
+              stroke-linecap="round"
+            ></path>
             <path
               class="ln ln-riser"
               d="M 730 1265 V 148"
               pathLength="1"
               fill="none"
-              stroke="#2fc7b7"
-              stroke-width="5"
+              stroke="#4E98C6"
+              stroke-width="7"
               stroke-linecap="round"
             ></path>
             {
               floorYs.map((y, i) => (
                 <>
                   <path
+                    class={`ln ln-branch casing br-${i}`}
+                    d={`M 730 ${y} H 590`}
+                    pathLength="1"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="9"
+                    stroke-linecap="round"
+                  />
+                  <path
                     class={`ln ln-branch br-${i}`}
                     d={`M 730 ${y} H 590`}
                     pathLength="1"
                     fill="none"
-                    stroke="#2fc7b7"
-                    stroke-width="4"
+                    stroke="#4E98C6"
+                    stroke-width="5.5"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    class={`ln ln-branch casing br-${i}`}
+                    d={`M 730 ${y} H 945`}
+                    pathLength="1"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="9"
                     stroke-linecap="round"
                   />
                   <path
@@ -122,8 +159,8 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
                     d={`M 730 ${y} H 945`}
                     pathLength="1"
                     fill="none"
-                    stroke="#2fc7b7"
-                    stroke-width="4"
+                    stroke="#4E98C6"
+                    stroke-width="5.5"
                     stroke-linecap="round"
                   />
                 </>
@@ -140,8 +177,8 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
                     cy={ap.y}
                     r="26"
                     fill="none"
-                    stroke="#2fc7b7"
-                    stroke-width="3"
+                    stroke="#4E98C6"
+                    stroke-width="3.5"
                   />
                   <circle
                     class={`ripple ripple-late rp-${i}`}
@@ -149,15 +186,15 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
                     cy={ap.y}
                     r="26"
                     fill="none"
-                    stroke="#2fc7b7"
-                    stroke-width="2.5"
+                    stroke="#4E98C6"
+                    stroke-width="3"
                   />
                 </>
               ))
             }
 
             <!-- 05 · monitoring-status op het rack -->
-            <circle class="status" cx="652" cy="1148" r="7" fill="#2fc7b7"
+            <circle class="status" cx="652" cy="1148" r="7" fill="#4E98C6"
             ></circle>
           </svg>
         </>
@@ -175,18 +212,18 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
   >
     {
       labels.map((item, i) => (
-        <li class={`hbi-label lb-${i} flex items-center gap-3`}>
+        <li class={`hbi-label lb-${i} flex items-center gap-2.5 lg:max-w-[168px]`}>
           <span
-            class="hbi-badge flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-teal-500/40 font-mono text-[11px] font-medium text-teal-600"
+            class="hbi-badge flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-brand-500/40 font-mono text-[10px] font-medium text-brand-600"
             aria-hidden="true"
           >
             {item.nr}
           </span>
           <span>
-            <span class="hbi-title block text-[14px] font-medium text-ink-950">
+            <span class="hbi-title block text-[13px] font-medium leading-snug text-ink-950">
               {item.label}
             </span>
-            <span class="block text-[12px] leading-snug text-ink-500">
+            <span class="block text-[11px] leading-snug text-ink-500">
               {item.sub}
             </span>
           </span>
@@ -199,7 +236,10 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
 <style>
   /* ====== ruststand: alles zichtbaar (geen JS / reduced motion) ====== */
   .hbi-overlay .ln {
-    opacity: 0.4;
+    opacity: 0.65;
+  }
+  .hbi-overlay .ln.casing {
+    opacity: 0.7;
   }
   .hbi-overlay .ripple {
     opacity: 0;
@@ -219,7 +259,7 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
   .hbi.ready .ln {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    opacity: 0.5;
+    opacity: 0.75;
   }
   .hbi.ready .glow,
   .hbi.ready .status {
@@ -346,8 +386,8 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
   }
   @keyframes hbi-badge {
     to {
-      background: var(--color-teal-600);
-      border-color: var(--color-teal-600);
+      background: var(--color-brand-600);
+      border-color: var(--color-brand-600);
       color: var(--color-white);
     }
   }
@@ -399,8 +439,8 @@ const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
     }
     .hbi.play .hbi-badge {
       animation: none;
-      background: var(--color-teal-600);
-      border-color: var(--color-teal-600);
+      background: var(--color-brand-600);
+      border-color: var(--color-brand-600);
       color: var(--color-white);
     }
   }

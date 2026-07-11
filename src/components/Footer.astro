@@ -58,7 +58,7 @@ const columns = [
                 href={site.linkedin}
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-teal-500 hover:text-teal-600"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-600"
               >
                 <span class="font-mono text-[11px] font-medium">in</span>
               </a>
@@ -78,7 +78,7 @@ const columns = [
               <a
                 href={`mailto:${site.email}`}
                 aria-label="E-mail"
-                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-teal-500 hover:text-teal-600"
+                class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-600"
               >
                 <svg
                   viewBox="0 0 20 20"
@@ -124,7 +124,7 @@ const columns = [
               <li>
                 <a
                   href={link.href}
-                  class="text-[13.5px] text-ink-600 transition-colors hover:text-teal-600"
+                  class="text-[13.5px] text-ink-600 transition-colors hover:text-brand-600"
                 >
                   {link.label}
                 </a>
@@ -144,7 +144,7 @@ const columns = [
             fill="none"
             stroke="currentColor"
             stroke-width="1.5"
-            class="h-4 w-4 shrink-0 text-teal-600"
+            class="h-4 w-4 shrink-0 text-brand-600"
             aria-hidden="true"
           >
             <path
@@ -155,7 +155,7 @@ const columns = [
             site.phone ? (
               <a
                 href={`tel:${site.phone.replace(/\s/g, '')}`}
-                class="hover:text-teal-600"
+                class="hover:text-brand-600"
               >
                 {site.phone}
               </a>
@@ -170,7 +170,7 @@ const columns = [
             fill="none"
             stroke="currentColor"
             stroke-width="1.5"
-            class="h-4 w-4 shrink-0 text-teal-600"
+            class="h-4 w-4 shrink-0 text-brand-600"
             aria-hidden="true"
           >
             <rect x="2.5" y="4.5" width="15" height="11" rx="1.5"></rect>
@@ -178,7 +178,7 @@ const columns = [
           </svg>
           {
             site.email ? (
-              <a href={`mailto:${site.email}`} class="hover:text-teal-600">
+              <a href={`mailto:${site.email}`} class="hover:text-brand-600">
                 {site.email}
               </a>
             ) : (
@@ -192,7 +192,7 @@ const columns = [
             fill="none"
             stroke="currentColor"
             stroke-width="1.5"
-            class="h-4 w-4 shrink-0 text-teal-600"
+            class="h-4 w-4 shrink-0 text-brand-600"
             aria-hidden="true"
           >
             <path d="M10 18s-6-5.2-6-9.5a6 6 0 1 1 12 0C16 12.8 10 18 10 18Z"

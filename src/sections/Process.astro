@@ -79,7 +79,7 @@ const steps = stepData.map((s) => ({
           <span class="connector" aria-hidden="true" />
           <div class="mb-2 flex items-center gap-2.5">
             <span
-              class="dot font-mono absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full border border-teal-100 bg-teal-50 text-[11px] font-medium text-teal-600 transition-colors duration-300 md:static"
+              class="dot font-mono absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full border border-brand-100 bg-brand-50 text-[11px] font-medium text-brand-600 transition-colors duration-300 md:static"
               aria-hidden="true"
             >
               {step.nr}
@@ -100,7 +100,7 @@ const steps = stepData.map((s) => ({
             />
           ) : (
             <div
-              class="step-media mt-5 flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-lg border border-line bg-paper-25 text-teal-600 transition-shadow duration-300"
+              class="step-media mt-5 flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-lg border border-line bg-paper-25 text-brand-600 transition-shadow duration-300"
               aria-hidden="true"
             >
               <span class="block h-12 w-12" set:html={step.icon} />
@@ -151,7 +151,7 @@ const steps = stepData.map((s) => ({
   .process-step .connector::after {
     content: '';
     position: absolute;
-    background: var(--color-teal-500);
+    background: var(--color-brand-500);
   }
   @media (max-width: 767px) {
     .process-step .connector::after {
@@ -178,8 +178,8 @@ const steps = stepData.map((s) => ({
 
   /* Actieve stap: badge vult, beeld krijgt accent */
   .process-step.active .dot {
-    border-color: var(--color-teal-600);
-    background: var(--color-teal-600);
+    border-color: var(--color-brand-600);
+    background: var(--color-brand-600);
     color: var(--color-white);
   }
   .process-step.active .connector::after {
@@ -187,7 +187,7 @@ const steps = stepData.map((s) => ({
   }
   .process-step.active .step-media {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-teal-500) 45%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
       0 10px 30px -12px rgba(10, 22, 32, 0.18);
   }
 
