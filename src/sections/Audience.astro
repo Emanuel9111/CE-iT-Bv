@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Section from '../components/Section.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import { asset } from '../utils/paths';
 
 /**
  * Twee grote keuzeblokken met foto + overlay (referentiestijl).
@@ -30,7 +31,7 @@ const audienceData = [
 const audiences = audienceData.map((a) => ({
   ...a,
   exists: fs.existsSync(path.join(process.cwd(), 'public', 'images', a.file)),
-  src: `${import.meta.env.BASE_URL}images/${a.file}`,
+  src: asset(`images/${a.file}`),
 }));
 ---
 
@@ -50,7 +51,7 @@ const audiences = audienceData.map((a) => ({
         <a
           href="#contact"
           class="reveal group relative block overflow-hidden rounded-xl border border-line"
-          style="aspect-ratio: 16/8.5;"
+          style="aspect-ratio: 16/7.5;"
         >
           {/* Foto-laag (of plaatshouder tot het bestand er is) */}
           <div class="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-[1.025]">

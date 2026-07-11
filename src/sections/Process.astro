@@ -4,6 +4,7 @@ import path from 'node:path';
 import Section from '../components/Section.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Button from '../components/Button.astro';
+import { asset } from '../utils/paths';
 
 /**
  * "Zo bouwen wij uw netwerk" — 5 stappen met beeld + scroll-activatie.
@@ -52,7 +53,7 @@ const stepData = [
 const steps = stepData.map((s) => ({
   ...s,
   exists: fs.existsSync(path.join(process.cwd(), 'public', 'images', s.file)),
-  src: `${import.meta.env.BASE_URL}images/${s.file}`,
+  src: asset(`images/${s.file}`),
 }));
 ---
 
@@ -71,7 +72,7 @@ const steps = stepData.map((s) => ({
 
   <ol
     id="process-flow"
-    class="process mt-8 grid gap-10 md:grid-cols-5 md:gap-6"
+    class="process mt-6 grid gap-8 md:grid-cols-5 md:gap-5"
   >
     {
       steps.map((step) => (
@@ -88,7 +89,7 @@ const steps = stepData.map((s) => ({
               {step.title}
             </h3>
           </div>
-          <p class="text-[13.5px] leading-relaxed text-ink-600">{step.text}</p>
+          <p class="text-[12.5px] leading-relaxed text-ink-600">{step.text}</p>
 
           {step.exists ? (
             <img
@@ -96,11 +97,11 @@ const steps = stepData.map((s) => ({
               alt={`${step.title} — stap ${step.nr} van onze werkwijze`}
               loading="lazy"
               decoding="async"
-              class="step-media mt-4 aspect-[4/3] w-full rounded-lg object-cover transition-shadow duration-300"
+              class="step-media mt-3 aspect-[16/10] w-full rounded-lg object-cover transition-shadow duration-300"
             />
           ) : (
             <div
-              class="step-media mt-4 flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-lg border border-line bg-paper-25 text-brand-600 transition-shadow duration-300"
+              class="step-media mt-3 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-lg border border-line bg-paper-25 text-brand-600 transition-shadow duration-300"
               aria-hidden="true"
             >
               <span class="block h-12 w-12" set:html={step.icon} />

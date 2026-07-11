@@ -143,9 +143,11 @@ const inputClasses =
       <Button type="submit" class="w-full sm:w-auto">Verstuur aanvraag</Button>
       {
         !formActive && (
-          <p class="font-mono text-[12px] text-ink-500">
-            [FORMULIER NOG NIET ACTIEF — web3formsKey invullen in
-            src/data/site.ts]
+          <p class="text-[13px] leading-relaxed text-ink-500">
+            {/* Activeren: web3formsKey invullen in src/data/site.ts */}
+            Het formulier wordt binnenkort geactiveerd — u kunt ons
+            ondertussen rechtstreeks bereiken via de contactgegevens onderaan
+            de pagina.
           </p>
         )
       }

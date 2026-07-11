@@ -9,7 +9,7 @@ const onGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 
 export default defineConfig({
   site: 'https://emanuel9111.github.io',
-  base: onGitHubActions ? '/CE-iT-Bv' : '/',
+  base: onGitHubActions ? '/CE-iT-Bv/' : '/',
   vite: {
     plugins: [tailwindcss()],
   },

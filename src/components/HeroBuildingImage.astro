@@ -17,6 +17,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { asset } from '../utils/paths';
 
 const labels = [
   { nr: '01', label: 'Internet', sub: 'Glasvezelverbinding' },
@@ -46,7 +47,7 @@ const floorYs = [150, 400, 652, 897];
 const exists = fs.existsSync(
   path.join(process.cwd(), 'public', 'images', 'hero-building.png')
 );
-const src = `${import.meta.env.BASE_URL}images/hero-building.png`;
+const src = asset('images/hero-building.png');
 ---
 
 <div class="hbi grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-5" id="hero-visual">
