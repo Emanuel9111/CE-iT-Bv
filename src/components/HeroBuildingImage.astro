@@ -409,6 +409,14 @@ const src = asset('images/hero-building.png');
     }
   }
 
+  /* Bij herhalingen van de sequence blijft het gebouw gewoon staan —
+     alleen het netwerk (lijnen, glow, ripples, labels) speelt opnieuw. */
+  .hbi.hold-img .hbi-img {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hbi.ready .hbi-img,
     .hbi.play .hbi-img {
@@ -456,12 +464,33 @@ const src = asset('images/hero-building.png');
 
   if (root && !reduced && 'IntersectionObserver' in window) {
     root.classList.add('ready');
+
+    // Sequence (~5.3s) + rusttijd (~2.7s), daarna opnieuw — in een lus
+    // zolang de visual in beeld is. Het gebouw blijft staan (hold-img);
+    // alleen het netwerk tekent zich opnieuw.
+    const SEQUENCE_MS = 5300;
+    const HOLD_MS = 2700;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const playSequence = () => {
+      root.classList.add('play');
+      timer = setTimeout(() => {
+        root.classList.add('hold-img');
+        root.classList.remove('play');
+        void root.offsetWidth; // reflow: reset alle animaties
+        timer = setTimeout(playSequence, 80);
+      }, SEQUENCE_MS + HOLD_MS);
+    };
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            root.classList.add('play');
-            io.disconnect();
+            if (!root.classList.contains('play')) playSequence();
+          } else {
+            clearTimeout(timer);
+            root.classList.add('hold-img');
+            root.classList.remove('play');
           }
         }
       },
