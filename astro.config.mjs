@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // site aanpassen en base verwijderen.
 export default defineConfig({
   site: 'https://emanuel9111.github.io',
-  base: '/CE-iT',
+  base: '/CE-iT-Bv',
   vite: {
     plugins: [tailwindcss()],
   },
