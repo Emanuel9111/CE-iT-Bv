@@ -1,14 +1,28 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import Section from '../components/Section.astro';
 import Eyebrow from '../components/Eyebrow.astro';
-import SmartImage from '../components/SmartImage.astro';
-import Todo from '../components/Todo.astro';
+import { asset } from '../utils/paths';
 import { site } from '../data/site';
+
+/**
+ * Over CE-iT. Productie-schoon: de zin met jaren/regio en de foto
+ * verschijnen pas wanneer de echte gegevens/het echte beeld er zijn
+ * (src/data/site.ts + /public/images/emanuel-terrein.jpg).
+ */
+const photoExists = fs.existsSync(
+  path.join(process.cwd(), 'public', 'images', 'emanuel-terrein.jpg')
+);
+const photoSrc = asset('images/emanuel-terrein.jpg');
+const hasExperienceLine = Boolean(site.yearsExperience || site.region);
 ---
 
 <Section id="over" tone="paper">
-  <div class="grid items-start gap-12 md:grid-cols-[3fr_2fr] md:gap-14">
-    <div class="reveal">
+  <div
+    class={`grid items-start gap-12 ${photoExists ? 'md:grid-cols-[3fr_2fr] md:gap-14' : ''}`}
+  >
+    <div class="reveal max-w-3xl">
       <Eyebrow>Lokaal en technisch betrokken</Eyebrow>
       <h2
         class="mt-3 font-display text-[28px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[34px]"
@@ -21,28 +35,30 @@ import { site } from '../data/site';
         lokaal, communiceren direct en blijven betrokken nadat de installatie
         is afgerond.
       </p>
-      <p class="mt-4 text-[16px] leading-relaxed text-ink-600">
-        {
-          site.yearsExperience ? (
-            `${site.yearsExperience} jaar terreinervaring`
-          ) : (
-            <>
-              <Todo label="X" /> jaar terreinervaring
-            </>
-          )
-        } op het Belgische FTTH-net, actief in {
-          site.region ? site.region : <Todo label="REGIO" />
-        }.
-      </p>
+      {
+        hasExperienceLine && (
+          <p class="mt-4 text-[16px] leading-relaxed text-ink-600">
+            {site.yearsExperience &&
+              `${site.yearsExperience} jaar terreinervaring op het Belgische FTTH-net`}
+            {site.yearsExperience && site.region && ', '}
+            {site.region && `actief in ${site.region}`}.
+          </p>
+        )
+      }
     </div>
 
-    <div class="reveal">
-      <SmartImage
-        file="emanuel-terrein.jpg"
-        label="Emanuel / CE-iT op locatie"
-        alt="Emanuel Costescu van CE-iT aan het werk op locatie"
-        aspect="4/5"
-      />
-    </div>
+    {
+      photoExists && (
+        <div class="reveal">
+          <img
+            src={photoSrc}
+            alt="Emanuel Costescu van CE-iT aan het werk op locatie"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/5] w-full rounded-lg object-cover"
+          />
+        </div>
+      )
+    }
   </div>
 </Section>

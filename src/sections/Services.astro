@@ -1,36 +1,40 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import Eyebrow from '../components/Eyebrow.astro';
-import SmartImage from '../components/SmartImage.astro';
+import { asset } from '../utils/paths';
 
 /**
  * Drie hoofdservices als compacte kolommen (design brief §7E).
  * Kleine onderpadding: deze sectie loopt visueel door in de
  * UniFi-band eronder (de technologie achter de services).
- * Foto's verschijnen automatisch zodra de bestanden in /public/images/ staan.
+ * Foto's verschijnen automatisch zodra de bestanden in /public/images/
+ * staan; tot dan géén zichtbare plaatshouder (productie-schoon).
+ * Geen "meer over"-links: die pagina's bestaan (nog) niet.
  */
-const services = [
+const serviceData = [
   {
     title: 'Netwerk & wifi',
     text: 'Professioneel ontworpen wifi- en netwerkoplossingen voor gebouwen waar bereik, stabiliteit en schaalbaarheid belangrijk zijn.',
-    cta: 'Meer over netwerk & wifi',
     file: 'service-netwerk-wifi.jpg',
-    label: 'AP-installatie / wifi',
   },
   {
     title: 'Bekabeling & installatie',
     text: 'Van patchkast tot werkplek, kamer of verdieping. We leggen een betrouwbare basis met nette en professionele bekabeling.',
-    cta: 'Meer over bekabeling',
     file: 'service-bekabeling.jpg',
-    label: 'nette bekabeling',
   },
   {
     title: 'Beheer & monitoring',
     text: 'We houden uw netwerk in het oog, voeren updates uit en grijpen in wanneer dat nodig is.',
-    cta: 'Meer over beheer',
     file: 'service-beheer.jpg',
-    label: 'monitoring dashboard',
   },
 ];
+
+const services = serviceData.map((s) => ({
+  ...s,
+  exists: fs.existsSync(path.join(process.cwd(), 'public', 'images', s.file)),
+  src: asset(`images/${s.file}`),
+}));
 ---
 
 <section id="oplossingen" class="bg-white">
@@ -48,30 +52,21 @@ const services = [
       {
         services.map((service) => (
           <div class="reveal">
-            <SmartImage
-              file={service.file}
-              label={service.label}
-              alt={`${service.title} door CE-iT`}
-              aspect="16/10"
-            />
-            <h3 class="mt-4 font-display text-[18px] font-semibold tracking-tight text-ink-950">
+            {service.exists && (
+              <img
+                src={service.src}
+                alt={`${service.title} door CE-iT`}
+                loading="lazy"
+                decoding="async"
+                class="mb-4 aspect-[16/10] w-full rounded-lg object-cover"
+              />
+            )}
+            <h3 class="font-display text-[18px] font-semibold tracking-tight text-ink-950">
               {service.title}
             </h3>
             <p class="mt-2 text-[13.5px] leading-relaxed text-ink-600">
               {service.text}
             </p>
-            <a
-              href="#contact"
-              class="group mt-3 inline-flex items-center gap-2 text-[14px] font-medium text-brand-600 hover:text-brand-500"
-            >
-              {service.cta}
-              <span
-                class="transition-transform duration-200 group-hover:translate-x-[3px]"
-                aria-hidden="true"
-              >
-                &rarr;
-              </span>
-            </a>
           </div>
         ))
       }
