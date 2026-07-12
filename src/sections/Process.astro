@@ -75,8 +75,8 @@ const steps = stepData.map((s) => ({
     class="process mt-6 grid gap-8 md:grid-cols-5 md:gap-5"
   >
     {
-      steps.map((step) => (
-        <li class="process-step relative pl-14 md:pl-0">
+      steps.map((step, i) => (
+        <li class="process-step relative pl-14 md:pl-0" style={`--i: ${i}`}>
           <span class="connector" aria-hidden="true" />
           <div class="mb-2 flex items-center gap-2.5">
             <span
@@ -117,7 +117,15 @@ const steps = stepData.map((s) => ({
 </Section>
 
 <style>
-  /* Connector: gestippelde basis + teal vulling die zich progressief vult */
+  /* ============================================================
+     Georkestreerde sequence (zoals de hero): bij scroll-in speelt
+     het proces zich één keer af — stap verschijnt, badge vult met
+     een fijne ripple, connector tekent zich naar de volgende stap,
+     beeld krijgt accent. Timing per stap via --i (0.45s cadans).
+     Zonder JS of met reduced-motion: alles direct zichtbaar.
+     ============================================================ */
+
+  /* Connector: gestippelde basis */
   .process-step .connector {
     position: absolute;
   }
@@ -156,7 +164,6 @@ const steps = stepData.map((s) => ({
       width: 2px;
       transform: scaleY(0);
       transform-origin: top;
-      transition: transform 0.6s ease-out 0.15s;
     }
   }
   @media (min-width: 768px) {
@@ -167,52 +174,152 @@ const steps = stepData.map((s) => ({
       height: 2px;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.6s ease-out 0.15s;
     }
   }
 
-  /* Actieve stap: badge vult, beeld krijgt accent */
-  .process-step.active .dot {
-    border-color: var(--color-brand-600);
-    background: var(--color-brand-600);
-    color: var(--color-white);
+  /* Ripple-ring rond de badge (eindig, één keer) */
+  .process-step .dot {
+    position: relative;
   }
-  .process-step.active .connector::after {
-    transform: none;
-  }
-  .process-step.active .step-media {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
-      0 10px 30px -12px rgba(10, 22, 32, 0.18);
+  .process-step .dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 2px solid var(--color-brand-500);
+    opacity: 0;
+    pointer-events: none;
   }
 
+  /* ---- voorbereid (JS aanwezig, motion oké) ---- */
+  html.js #process-flow.ready .process-step {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  /* ---- afspelen: cadans van 0.45s per stap ---- */
+  #process-flow.play .process-step {
+    animation: pf-step-in 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+    animation-delay: calc(var(--i) * 0.45s);
+  }
+  #process-flow.play .dot {
+    animation: pf-dot-fill 0.35s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+  }
+  #process-flow.play .dot::after {
+    animation: pf-ripple 0.9s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+  }
+  #process-flow.play .step-title {
+    animation: pf-title 0.35s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+  }
+  #process-flow.play .connector::after {
+    animation: pf-draw-x 0.45s ease-in-out forwards;
+    animation-delay: calc(var(--i) * 0.45s + 0.35s);
+  }
+  @media (max-width: 767px) {
+    #process-flow.play .connector::after {
+      animation-name: pf-draw-y;
+    }
+  }
+  #process-flow.play .step-media {
+    animation: pf-media 0.5s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.45s + 0.3s);
+  }
+
+  @keyframes pf-step-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes pf-dot-fill {
+    to {
+      border-color: var(--color-brand-600);
+      background: var(--color-brand-600);
+      color: var(--color-white);
+    }
+  }
+  @keyframes pf-ripple {
+    0% {
+      opacity: 0;
+      transform: scale(0.7);
+    }
+    30% {
+      opacity: 0.55;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  @keyframes pf-title {
+    to {
+      color: var(--color-ink-950);
+    }
+  }
+  @keyframes pf-draw-x {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes pf-draw-y {
+    to {
+      transform: scaleY(1);
+    }
+  }
+  @keyframes pf-media {
+    to {
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
+        0 10px 30px -12px rgba(10, 22, 32, 0.18);
+    }
+  }
+
+  /* ---- fallbacks: alles zichtbaar en 'af' ---- */
   @media (prefers-reduced-motion: reduce) {
-    .process-step .connector::after,
-    .process-step .dot,
-    .process-step .step-media {
-      transition: none;
+    html.js #process-flow.ready .process-step,
+    #process-flow.play .process-step {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+    #process-flow.play .dot {
+      animation: none;
+      border-color: var(--color-brand-600);
+      background: var(--color-brand-600);
+      color: var(--color-white);
+    }
+    #process-flow.play .dot::after,
+    #process-flow.play .step-media,
+    #process-flow.play .step-title {
+      animation: none;
+    }
+    #process-flow.play .connector::after {
+      animation: none;
+      transform: none;
     }
   }
 </style>
 
 <script>
-  const steps = document.querySelectorAll('#process-flow .process-step');
+  const flow = document.getElementById('process-flow');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (reduced || !('IntersectionObserver' in window)) {
-    steps.forEach((el) => el.classList.add('active'));
-  } else {
+  if (flow && 'IntersectionObserver' in window) {
+    if (!reduced) flow.classList.add('ready');
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            io.unobserve(entry.target);
+            flow.classList.add('play');
+            io.disconnect();
           }
         }
       },
-      { rootMargin: '-15% 0px -15% 0px', threshold: 0 }
+      { threshold: 0.25 }
     );
-    steps.forEach((el) => io.observe(el));
+    io.observe(flow);
   }
 </script>
