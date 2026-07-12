@@ -9,12 +9,11 @@ export const site = {
   address: 'Sousbeekstraat 86, 9250 Waasmunster',
   btw: 'BE 0765.560.127',
 
-  // TODO — door Emanuel aan te leveren:
-  phone: '', // bv. '+32 4xx xx xx xx'
-  email: '', // bv. 'info@ce-it.be'
-  linkedin: '', // volledige URL van de LinkedIn-pagina
-  yearsExperience: '', // bv. '8'
-  region: '', // bv. 'Waasland en omstreken'
+  phone: '+32 488 51 17 76',
+  email: 'info@ce-it.be',
+  linkedin: '', // volledige URL van de LinkedIn-pagina (nog aan te vullen)
+  yearsExperience: '10',
+  region: 'Oost-Vlaanderen',
 
   // Web3Forms access key — gratis aan te maken op https://web3forms.com
   // (e-mail invullen → key komt per mail). Zolang leeg: formulier inactief.
