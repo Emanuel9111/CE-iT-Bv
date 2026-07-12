@@ -2,14 +2,11 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
-// GitHub Pages (project site). Bij overstap naar eigen domein (ce-it.be):
-// site aanpassen en base verwijderen.
-// base geldt alleen op GitHub Actions (deploy) — lokaal blijft de site op /.
-const onGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-
+// Eigen domein op GitHub Pages: de site draait op de root van ce-it.be,
+// dus base '/' (geen /CE-iT-Bv/ meer). public/CNAME koppelt het domein.
 export default defineConfig({
-  site: 'https://emanuel9111.github.io',
-  base: onGitHubActions ? '/CE-iT-Bv/' : '/',
+  site: 'https://ce-it.be',
+  base: '/',
   vite: {
     plugins: [tailwindcss()],
   },
