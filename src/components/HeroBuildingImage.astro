@@ -401,13 +401,9 @@ const src = asset('images/hero-building.png');
     }
   }
 
-  /* mobiel: lichter — geen lijnwerk, wel reveal + ripples */
-  @media (max-width: 639px) {
-    .hbi-overlay .ln,
-    .hbi-overlay .glow {
-      display: none;
-    }
-  }
+  /* Mobiel: het lijnwerk (fiber, backbone-omhoog, aftakkingen) speelt
+     óók af — de SVG-overlay deelt de viewBox met de render en schaalt
+     exact mee, dus alles blijft uitgelijnd, alleen fijner. */
 
   /* Bij herhalingen van de sequence blijft het gebouw gewoon staan —
      alleen het netwerk (lijnen, glow, ripples, labels) speelt opnieuw. */
