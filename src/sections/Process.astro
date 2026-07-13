@@ -197,35 +197,44 @@ const steps = stepData.map((s) => ({
     transform: translateY(12px);
   }
 
-  /* ---- afspelen: cadans van 0.45s per stap ---- */
-  #process-flow.play .process-step {
+  /* Vertraging per stap: op desktop een cadans (--i × 0.45s), op mobiel
+     0s want elke stap animeert los wanneer hij in beeld scrollt. */
+  .process-step {
+    --delay: 0s;
+  }
+  #process-flow.cascade .process-step {
+    --delay: calc(var(--i) * 0.45s);
+  }
+
+  /* ---- afspelen: getriggerd per stap via .animate ---- */
+  .process-step.animate {
     animation: pf-step-in 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
-    animation-delay: calc(var(--i) * 0.45s);
+    animation-delay: var(--delay);
   }
-  #process-flow.play .dot {
+  .process-step.animate .dot {
     animation: pf-dot-fill 0.35s ease-out forwards;
-    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+    animation-delay: calc(var(--delay) + 0.2s);
   }
-  #process-flow.play .dot::after {
+  .process-step.animate .dot::after {
     animation: pf-ripple 0.9s ease-out forwards;
-    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+    animation-delay: calc(var(--delay) + 0.2s);
   }
-  #process-flow.play .step-title {
+  .process-step.animate .step-title {
     animation: pf-title 0.35s ease-out forwards;
-    animation-delay: calc(var(--i) * 0.45s + 0.2s);
+    animation-delay: calc(var(--delay) + 0.2s);
   }
-  #process-flow.play .connector::after {
+  .process-step.animate .connector::after {
     animation: pf-draw-x 0.45s ease-in-out forwards;
-    animation-delay: calc(var(--i) * 0.45s + 0.35s);
+    animation-delay: calc(var(--delay) + 0.35s);
   }
   @media (max-width: 767px) {
-    #process-flow.play .connector::after {
+    .process-step.animate .connector::after {
       animation-name: pf-draw-y;
     }
   }
-  #process-flow.play .step-media {
+  .process-step.animate .step-media {
     animation: pf-media 0.5s ease-out forwards;
-    animation-delay: calc(var(--i) * 0.45s + 0.3s);
+    animation-delay: calc(var(--delay) + 0.3s);
   }
 
   @keyframes pf-step-in {
@@ -277,49 +286,74 @@ const steps = stepData.map((s) => ({
     }
   }
 
-  /* ---- fallbacks: alles zichtbaar en 'af' ---- */
-  @media (prefers-reduced-motion: reduce) {
-    html.js #process-flow.ready .process-step,
-    #process-flow.play .process-step {
-      opacity: 1;
-      transform: none;
-      animation: none;
-    }
-    #process-flow.play .dot {
-      animation: none;
-      border-color: var(--color-brand-600);
-      background: var(--color-brand-600);
-      color: var(--color-white);
-    }
-    #process-flow.play .dot::after,
-    #process-flow.play .step-media,
-    #process-flow.play .step-title {
-      animation: none;
-    }
-    #process-flow.play .connector::after {
-      animation: none;
-      transform: none;
-    }
+  /* ---- fallback: reduced-motion → alles zichtbaar en in eindstaat ---- */
+  #process-flow.shown .process-step {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  #process-flow.shown .dot {
+    border-color: var(--color-brand-600);
+    background: var(--color-brand-600);
+    color: var(--color-white);
+  }
+  #process-flow.shown .connector::after {
+    transform: none;
+  }
+  #process-flow.shown .step-media {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
+      0 10px 30px -12px rgba(10, 22, 32, 0.18);
   }
 </style>
 
 <script>
   const flow = document.getElementById('process-flow');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (flow && 'IntersectionObserver' in window) {
-    if (!reduced) flow.classList.add('ready');
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            flow.classList.add('play');
-            io.disconnect();
-          }
-        }
-      },
-      { threshold: 0.25 }
-    );
-    io.observe(flow);
+    const reduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (reduced) {
+      // Geen beweging: direct de eindstaat tonen.
+      flow.classList.add('shown');
+    } else {
+      flow.classList.add('ready'); // stappen verbergen tot ze animeren
+      const steps = Array.from(flow.querySelectorAll('.process-step'));
+      const desktop = window.matchMedia('(min-width: 768px)').matches;
+
+      if (desktop) {
+        // Eén georkestreerde cascade zodra de sectie in beeld komt.
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                flow.classList.add('cascade');
+                steps.forEach((s) => s.classList.add('animate'));
+                io.disconnect();
+              }
+            }
+          },
+          { threshold: 0, rootMargin: '0px 0px -20% 0px' }
+        );
+        io.observe(flow);
+      } else {
+        // Mobiel: elke stap animeert wanneer hij zelf in beeld scrollt
+        // (of al voorbij gescrolld is), zodat niets onzichtbaar blijft.
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+                entry.target.classList.add('animate');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.3, rootMargin: '0px 0px -8% 0px' }
+        );
+        steps.forEach((s) => io.observe(s));
+      }
+    }
   }
 </script>
