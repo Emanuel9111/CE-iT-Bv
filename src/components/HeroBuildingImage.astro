@@ -11,8 +11,9 @@
  *   5. AP's rimpelen één voor één (eindige ripple, geen continue puls) → label 04
  *   6. monitoring-status verschijnt → label 05
  *
+ * - .play wordt één keer gezet (blijft staan): lijnen tekenen zich en
+ *   blijven zichtbaar; de doorlopende beweging komt van de gloed-puls.
  * - prefers-reduced-motion: alles direct zichtbaar, geen animatie
- * - mobiel (<640px): lijnen uit, alleen reveal + ripples (licht)
  * - Bestand ontbreekt → nette plaatshouder, geen animatie
  */
 import fs from 'node:fs';
@@ -495,42 +496,32 @@ const src = asset('images/hero-building.png');
 
 <script>
   const root = document.getElementById('hero-visual');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (root && !reduced && 'IntersectionObserver' in window) {
-    root.classList.add('ready');
+  if (root && 'IntersectionObserver' in window) {
+    const reduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
 
-    // Sequence (~5.3s) + rusttijd (~2.7s), daarna opnieuw — in een lus
-    // zolang de visual in beeld is. Het gebouw blijft staan (hold-img);
-    // alleen het netwerk tekent zich opnieuw.
-    const SEQUENCE_MS = 5300;
-    const HOLD_MS = 2700;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    const playSequence = () => {
-      root.classList.add('play');
-      timer = setTimeout(() => {
-        root.classList.add('hold-img');
-        root.classList.remove('play');
-        void root.offsetWidth; // reflow: reset alle animaties
-        timer = setTimeout(playSequence, 80);
-      }, SEQUENCE_MS + HOLD_MS);
-    };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            if (!root.classList.contains('play')) playSequence();
-          } else {
-            clearTimeout(timer);
-            root.classList.add('hold-img');
-            root.classList.remove('play');
+    if (!reduced) {
+      // Verberg tot de sequence speelt.
+      root.classList.add('ready');
+      // .play wordt ÉÉN keer gezet zodra de visual in beeld komt en blijft
+      // staan: de lijnen tekenen zich en blijven zichtbaar (forwards).
+      // De doorlopende beweging komt van de gloed-puls (CSS, infinite).
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              root.classList.add('play');
+              io.disconnect();
+            }
           }
-        }
-      },
-      { threshold: 0.3 }
-    );
-    io.observe(root);
+        },
+        { threshold: 0.15 }
+      );
+      io.observe(root);
+    }
+    // reduced-motion: geen 'ready'/'play' → lijnen staan statisch zichtbaar,
+    // puls blijft uit.
   }
 </script>
