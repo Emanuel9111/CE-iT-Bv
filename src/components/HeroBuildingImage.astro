@@ -76,6 +76,10 @@ const src = asset('images/hero-building.png');
                 <stop offset="60%" stop-color="#4E98C6" stop-opacity="0.16" />
                 <stop offset="100%" stop-color="#4E98C6" stop-opacity="0" />
               </radialGradient>
+              <!-- Zachte gloed voor de bewegende puls -->
+              <filter id="pulse-glow" x="-300%" y="-300%" width="700%" height="700%">
+                <feGaussianBlur stdDeviation="8"></feGaussianBlur>
+              </filter>
             </defs>
 
             <!-- 01 · fiber komt binnen (witte casing eronder = leesbaar
@@ -86,7 +90,7 @@ const src = asset('images/hero-building.png');
               pathLength="1"
               fill="none"
               stroke="#ffffff"
-              stroke-width="12"
+              stroke-width="15"
               stroke-linecap="round"
             ></path>
             <path
@@ -95,7 +99,7 @@ const src = asset('images/hero-building.png');
               pathLength="1"
               fill="none"
               stroke="#4E98C6"
-              stroke-width="8"
+              stroke-width="10"
               stroke-linecap="round"
             ></path>
 
@@ -116,7 +120,7 @@ const src = asset('images/hero-building.png');
               pathLength="1"
               fill="none"
               stroke="#ffffff"
-              stroke-width="11"
+              stroke-width="14"
               stroke-linecap="round"
             ></path>
             <path
@@ -125,9 +129,14 @@ const src = asset('images/hero-building.png');
               pathLength="1"
               fill="none"
               stroke="#4E98C6"
-              stroke-width="7"
+              stroke-width="10"
               stroke-linecap="round"
             ></path>
+            <!-- Bewegende puls die langs de backbone omhoog loopt -->
+            <g class="riser-pulse">
+              <circle cx="730" cy="1265" r="16" fill="#4E98C6" filter="url(#pulse-glow)"></circle>
+              <circle cx="730" cy="1265" r="6.5" fill="#eaf5fc"></circle>
+            </g>
             {
               floorYs.map((y, i) => (
                 <>
@@ -137,7 +146,7 @@ const src = asset('images/hero-building.png');
                     pathLength="1"
                     fill="none"
                     stroke="#ffffff"
-                    stroke-width="9"
+                    stroke-width="11"
                     stroke-linecap="round"
                   />
                   <path
@@ -146,7 +155,7 @@ const src = asset('images/hero-building.png');
                     pathLength="1"
                     fill="none"
                     stroke="#4E98C6"
-                    stroke-width="5.5"
+                    stroke-width="7"
                     stroke-linecap="round"
                   />
                   <path
@@ -155,7 +164,7 @@ const src = asset('images/hero-building.png');
                     pathLength="1"
                     fill="none"
                     stroke="#ffffff"
-                    stroke-width="9"
+                    stroke-width="11"
                     stroke-linecap="round"
                   />
                   <path
@@ -164,7 +173,7 @@ const src = asset('images/hero-building.png');
                     pathLength="1"
                     fill="none"
                     stroke="#4E98C6"
-                    stroke-width="5.5"
+                    stroke-width="7"
                     stroke-linecap="round"
                   />
                 </>
@@ -291,6 +300,32 @@ const src = asset('images/hero-building.png');
   .hbi.play .ln-riser {
     animation: hbi-draw 1.15s cubic-bezier(0.4, 0, 0.3, 1) forwards;
     animation-delay: 2s;
+  }
+
+  /* Bewegende puls: één zachte gloed die herhaald langs de backbone
+     omhoog loopt (het 'levende signaal'), nadat de riser getekend is. */
+  .hbi-overlay .riser-pulse {
+    opacity: 0;
+  }
+  .hbi.play .riser-pulse {
+    animation: hbi-pulse-up 2.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    animation-delay: 3.1s;
+  }
+  @keyframes hbi-pulse-up {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    12% {
+      opacity: 1;
+    }
+    82% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-1117px);
+      opacity: 0;
+    }
   }
   .hbi.play .br-3 {
     animation: hbi-draw 0.4s ease-out forwards;
@@ -437,6 +472,10 @@ const src = asset('images/hero-building.png');
       animation: none;
     }
     .hbi.play .ripple {
+      animation: none;
+      opacity: 0;
+    }
+    .hbi.play .riser-pulse {
       animation: none;
       opacity: 0;
     }
