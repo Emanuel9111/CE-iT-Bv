@@ -1,359 +1,847 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-import Section from '../components/Section.astro';
-import Eyebrow from '../components/Eyebrow.astro';
-
+/**
+ * "Zo bouwen wij uw netwerk" — premium proces-animatie (tweede signature
+ * na de hero). Per stap een micro-animatie die de stap uitlegt:
+ * scan → kabel-tekening → LED-boot → wifi-ripples → dashboard-sweep.
+ * Speelt één keer bij scroll-in; op mobiel is alle content altijd
+ * zichtbaar (opacity 1) en worden de effecten vereenvoudigd.
+ * Bron: CEIT-process-animation-pack, aangepast op de site-tokens.
+ */
 import { asset } from '../utils/paths';
 
-/**
- * "Zo bouwen wij uw netwerk" — 5 stappen met beeld + scroll-activatie.
- * Per stap wordt de afbeelding getoond zodra het bestand bestaat in
- * /public/images/ (canonieke namen hieronder); tot dan een getekend icoon.
- * Connectors vullen zich progressief met teal wanneer een stap actief wordt.
- */
-const stepData = [
+const steps = [
   {
-    nr: '01',
+    number: '01',
+    key: 'analyse',
     title: 'Analyse',
     text: 'We bekijken uw gebouw, uw infrastructuur en wat uw gebruikers nodig hebben.',
-    file: 'step-analyse.png',
-    icon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="18" height="26" rx="2"/><path d="M13 18h3m-3 6h3m-3 6h3"/><circle cx="31" cy="27" r="8"/><path d="m37 33 5 5"/></svg>',
+    image: 'images/step-analyse.png',
+    alt: 'Analyse van een gebouw en de bestaande infrastructuur',
+    status: 'Analyse uitgevoerd',
   },
   {
-    nr: '02',
+    number: '02',
+    key: 'bekabeling',
     title: 'Bekabeling',
     text: 'Professionele structurele bekabeling op de juiste plaatsen, in elke ruimte.',
-    file: 'step-bekabeling.png',
-    icon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 38V16a6 6 0 0 1 6-6h4"/><path d="M16 38V20a4 4 0 0 1 4-4h2"/><rect x="26" y="8" width="12" height="10" rx="2"/><path d="M30 18v4m4-4v4"/><path d="M22 38h16"/></svg>',
+    image: 'images/step-bekabeling.png',
+    alt: 'Structurele bekabeling die door een gebouw naar de patchkast loopt',
+    status: 'Bekabeling geoptimaliseerd',
   },
   {
-    nr: '03',
+    number: '03',
+    key: 'apparatuur',
     title: 'Apparatuur',
     text: 'We installeren en configureren gateway, switches en netwerkcomponenten.',
-    file: 'step-apparatuur.png',
-    icon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="32" height="9" rx="2"/><rect x="8" y="27" width="32" height="9" rx="2"/><circle cx="14" cy="18.5" r="1.4" fill="currentColor"/><circle cx="14" cy="31.5" r="1.4" fill="currentColor"/><path d="M22 18.5h12m-12 13h12"/></svg>',
+    image: 'images/step-apparatuur.png',
+    alt: 'Professionele netwerkswitch',
+    status: 'Apparatuur actief',
   },
   {
-    nr: '04',
+    number: '04',
+    key: 'wifi',
     title: 'Wifi',
     text: 'Access points op de juiste plaatsen voor stabiele en consistente dekking.',
-    file: 'step-wifi.png',
-    icon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="30" r="7"/><circle cx="24" cy="30" r="2" fill="currentColor"/><path d="M12 20a17 17 0 0 1 24 0"/><path d="M16.5 24.5a11 11 0 0 1 15 0"/></svg>',
+    image: 'images/step-wifi.png',
+    alt: 'Access point met wifi-dekking aan een plafond',
+    status: 'Dekking geactiveerd',
   },
   {
-    nr: '05',
+    number: '05',
+    key: 'beheer',
     title: 'Beheer',
     text: 'We monitoren en beheren het netwerk op afstand en volgen snel op.',
-    file: 'step-beheer.png',
-    icon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="12" width="28" height="18" rx="2"/><path d="M15 21h4l2-4 3 8 2.5-5H32"/><path d="M8 36h32"/></svg>',
+    image: 'images/step-beheer.png',
+    alt: 'Dashboard voor netwerkbeheer en monitoring',
+    status: 'Netwerk online · Beheerd door CE-iT',
   },
 ];
-
-const steps = stepData.map((s) => ({
-  ...s,
-  exists: fs.existsSync(path.join(process.cwd(), 'public', 'images', s.file)),
-  src: asset(`images/${s.file}`),
-}));
 ---
 
-<Section id="werkwijze">
-  <div class="reveal max-w-3xl">
-    <Eyebrow>Van analyse tot beheer</Eyebrow>
-    <h2
-      class="mt-3 font-display text-[28px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[34px]"
-    >
-      Zo bouwen wij uw netwerk.
-    </h2>
-    <p class="mt-3 max-w-2xl text-[15.5px] leading-relaxed text-ink-600">
-      Eén duidelijk proces. Eén partner voor het volledige netwerk.
+<section
+  id="werkwijze"
+  class="process-premium"
+  data-process-premium
+  aria-labelledby="process-premium-title"
+>
+  <div class="process-premium__inner">
+    <div class="process-premium__heading">
+      <p class="process-premium__eyebrow">Van analyse tot beheer</p>
+      <h2 id="process-premium-title">Zo bouwen wij uw netwerk.</h2>
+      <p>Eén duidelijk proces. Eén partner voor het volledige netwerk.</p>
+    </div>
+
+    <div class="process-premium__timeline" aria-hidden="true">
+      <div class="process-premium__track"></div>
+      <div class="process-premium__progress" data-process-progress></div>
+      <span class="process-premium__data-pulse" data-process-pulse></span>
+    </div>
+
+    <div class="process-premium__grid">
+      {
+        steps.map((step, index) => (
+          <article
+            class={`process-step process-step--${step.key}`}
+            data-process-step
+            data-index={index}
+          >
+            <div class="process-step__head">
+              <span class="process-step__number">{step.number}</span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </div>
+
+            <div class="process-step__media">
+              <img
+                src={asset(step.image)}
+                alt={step.alt}
+                loading={index < 2 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+
+              {step.key === 'analyse' && (
+                <div class="fx fx--analyse" aria-hidden="true">
+                  <span class="fx-scan" />
+                  <span class="fx-target fx-target--one" />
+                  <span class="fx-target fx-target--two" />
+                </div>
+              )}
+
+              {step.key === 'bekabeling' && (
+                <svg
+                  class="fx fx--cable"
+                  viewBox="0 0 100 72"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    class="cable-shadow"
+                    d="M11 66 C24 61 24 46 38 46 S52 28 62 28 S72 14 90 10"
+                  />
+                  <path
+                    class="cable-line"
+                    d="M11 66 C24 61 24 46 38 46 S52 28 62 28 S72 14 90 10"
+                  />
+                </svg>
+              )}
+
+              {step.key === 'apparatuur' && (
+                <div class="fx fx--apparatuur" aria-hidden="true">
+                  <span class="led led--1" />
+                  <span class="led led--2" />
+                  <span class="led led--3" />
+                  <span class="led led--4" />
+                  <span class="led led--5" />
+                  <span class="led led--6" />
+                </div>
+              )}
+
+              {step.key === 'wifi' && (
+                <div class="fx fx--wifi" aria-hidden="true">
+                  <span class="wifi-ring wifi-ring--1" />
+                  <span class="wifi-ring wifi-ring--2" />
+                  <span class="wifi-ring wifi-ring--3" />
+                </div>
+              )}
+
+              {step.key === 'beheer' && (
+                <div class="fx fx--beheer" aria-hidden="true">
+                  <span class="screen-sweep" />
+                  <span class="online-dot" />
+                </div>
+              )}
+            </div>
+
+            <p class="process-step__status">
+              <span />
+              {step.status}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="process-premium__final" data-process-final>
+      Van eerste analyse tot dagelijks beheer.{' '}
+      <strong>Eén partner voor het volledige netwerk.</strong>
     </p>
   </div>
+</section>
 
-  <ol
-    id="process-flow"
-    class="process mt-6 grid gap-8 md:grid-cols-5 md:gap-5"
-  >
-    {
-      steps.map((step, i) => (
-        <li class="process-step relative pl-14 md:pl-0" style={`--i: ${i}`}>
-          <span class="connector" aria-hidden="true" />
-          <div class="mb-2 flex items-center gap-2.5">
-            <span
-              class="dot font-mono absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full border border-brand-100 bg-brand-50 text-[11px] font-medium text-brand-600 transition-colors duration-300 md:static"
-              aria-hidden="true"
-            >
-              {step.nr}
-            </span>
-            <h3 class="step-title font-display text-[17px] font-semibold tracking-tight text-ink-950">
-              {step.title}
-            </h3>
-          </div>
-          <p class="text-[12.5px] leading-relaxed text-ink-600">{step.text}</p>
+<script>
+  const section = document.querySelector('[data-process-premium]');
 
-          {step.exists ? (
-            <img
-              src={step.src}
-              alt={`${step.title} — stap ${step.nr} van onze werkwijze`}
-              loading="lazy"
-              decoding="async"
-              class="step-media mt-3 aspect-[16/10] w-full rounded-lg object-cover transition-shadow duration-300"
-            />
-          ) : (
-            <div
-              class="step-media mt-3 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-lg border border-line bg-paper-25 text-brand-600 transition-shadow duration-300"
-              aria-hidden="true"
-            >
-              <span class="block h-12 w-12" set:html={step.icon} />
-              <span class="px-3 text-center font-mono text-[10px] leading-tight text-ink-500">
-                [{step.file}]
-              </span>
-            </div>
-          )}
-        </li>
-      ))
+  if (section) {
+    const steps = Array.from(section.querySelectorAll('[data-process-step]'));
+    const progress = section.querySelector<HTMLElement>(
+      '[data-process-progress]'
+    );
+    const pulse = section.querySelector('[data-process-pulse]');
+    const finalMessage = section.querySelector('[data-process-final]');
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    let hasPlayed = false;
+
+    const activateAll = () => {
+      steps.forEach((step) => step.classList.add('is-active'));
+      progress?.style.setProperty('--progress', '100%');
+      pulse?.classList.add('is-active');
+      finalMessage?.classList.add('is-visible');
+    };
+
+    const play = () => {
+      if (hasPlayed) return;
+      hasPlayed = true;
+
+      if (reducedMotion) {
+        activateAll();
+        return;
+      }
+
+      steps.forEach((step, index) => {
+        window.setTimeout(() => {
+          step.classList.add('is-active');
+          const pct =
+            steps.length === 1 ? 100 : (index / (steps.length - 1)) * 100;
+          progress?.style.setProperty('--progress', `${pct}%`);
+
+          if (index === steps.length - 1) {
+            window.setTimeout(() => {
+              pulse?.classList.add('is-active');
+              finalMessage?.classList.add('is-visible');
+            }, 450);
+          }
+        }, index * 850);
+      });
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            play();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(section);
+    } else {
+      activateAll();
     }
-  </ol>
-</Section>
+  }
+</script>
 
 <style>
-  /* ============================================================
-     Georkestreerde sequence (zoals de hero): bij scroll-in speelt
-     het proces zich één keer af — stap verschijnt, badge vult met
-     een fijne ripple, connector tekent zich naar de volgende stap,
-     beeld krijgt accent. Timing per stap via --i (0.45s cadans).
-     Zonder JS of met reduced-motion: alles direct zichtbaar.
-     ============================================================ */
-
-  /* Connector: gestippelde basis */
-  .process-step .connector {
-    position: absolute;
-  }
-  @media (max-width: 767px) {
-    .process-step .connector {
-      left: 15px;
-      top: 40px;
-      bottom: -40px;
-      border-left: 2px dashed var(--color-line);
-    }
-    .process-step:last-child .connector {
-      display: none;
-    }
-  }
-  @media (min-width: 768px) {
-    .process-step .connector {
-      top: 15px;
-      left: calc(100% - 8px);
-      width: calc(100% * 0.12 + 24px);
-      border-top: 2px dashed var(--color-line);
-    }
-    .process-step:last-child .connector {
-      display: none;
-    }
-  }
-  .process-step .connector::after {
-    content: '';
-    position: absolute;
-    background: var(--color-brand-500);
-  }
-  @media (max-width: 767px) {
-    .process-step .connector::after {
-      left: -2px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      transform: scaleY(0);
-      transform-origin: top;
-    }
-  }
-  @media (min-width: 768px) {
-    .process-step .connector::after {
-      top: -2px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      transform: scaleX(0);
-      transform-origin: left;
-    }
+  .process-premium {
+    --brand: #4e98c6;
+    --brand-strong: #367daa;
+    --ink: #0f1922;
+    --muted: #647480;
+    --line: #d8e5ed;
+    background: #fff;
+    overflow: clip;
   }
 
-  /* Ripple-ring rond de badge (eindig, één keer) */
-  .process-step .dot {
+  .process-premium__inner {
+    width: min(1152px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 56px 0 64px;
+  }
+
+  .process-premium__heading {
+    max-width: 660px;
+    margin-bottom: 30px;
+  }
+  .process-premium__eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--brand-strong);
+  }
+  .process-premium h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(28px, 3.4vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .process-premium__heading > p:last-child {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  .process-premium__timeline {
     position: relative;
+    height: 3px;
+    margin: 0 7.5% 24px;
   }
-  .process-step .dot::after {
-    content: '';
+  .process-premium__track,
+  .process-premium__progress {
     position: absolute;
-    inset: -3px;
-    border-radius: 9999px;
-    border: 2px solid var(--color-brand-500);
+    inset: 0;
+    border-radius: 999px;
+  }
+  .process-premium__track {
+    background: var(--line);
+  }
+  .process-premium__progress {
+    --progress: 0%;
+    width: var(--progress);
+    right: auto;
+    background: linear-gradient(90deg, var(--brand-strong), #72b9e5);
+    box-shadow: 0 0 18px rgba(78, 152, 198, 0.3);
+    transition: width 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .process-premium__data-pulse {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: white;
+    box-shadow:
+      0 0 0 3px rgba(78, 152, 198, 0.3),
+      0 0 16px rgba(78, 152, 198, 0.9);
     opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+  .process-premium__data-pulse.is-active {
+    opacity: 1;
+    animation: dataPulse 2.8s ease-in-out 1;
+  }
+
+  .process-premium__grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .process-step {
+    min-width: 0;
+    opacity: 0.54;
+    transform: translateY(12px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease;
+  }
+  .process-step.is-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .process-step__head {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 11px;
+    align-items: start;
+    min-height: 142px;
+  }
+  .process-step__number {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(78, 152, 198, 0.5);
+    font-family: var(--font-mono);
+    color: var(--brand-strong);
+    font-size: 12px;
+    font-weight: 500;
+    transition:
+      color 0.35s ease,
+      background 0.35s ease,
+      box-shadow 0.35s ease,
+      transform 0.35s ease;
+  }
+  .process-step.is-active .process-step__number {
+    color: white;
+    background: var(--brand);
+    box-shadow: 0 8px 24px rgba(78, 152, 198, 0.22);
+    transform: scale(1.04);
+  }
+  .process-step h3 {
+    margin: 5px 0 7px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 17px;
+  }
+  .process-step__head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+
+  .process-step__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border: 1px solid #d8e4eb;
+    border-radius: 12px;
+    background: #f8fbfc;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(16, 36, 48, 0.04);
+    transition:
+      border-color 0.45s ease,
+      box-shadow 0.45s ease,
+      transform 0.45s ease;
+  }
+  .process-step.is-active .process-step__media {
+    border-color: rgba(78, 152, 198, 0.62);
+    box-shadow: 0 18px 44px rgba(37, 90, 120, 0.12);
+    transform: translateY(-2px);
+  }
+  .process-step__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fx {
+    position: absolute;
+    inset: 0;
     pointer-events: none;
   }
 
-  /* ---- voorbereid (JS aanwezig, motion oké) ---- */
-  html.js #process-flow.ready .process-step {
+  /* Analyse: scan + focus targets */
+  .fx-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -20%;
+    height: 26%;
     opacity: 0;
-    transform: translateY(12px);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(108, 188, 235, 0.16),
+      rgba(78, 152, 198, 0.52),
+      transparent
+    );
+  }
+  .process-step--analyse.is-active .fx-scan {
+    animation: scanPass 1.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s 1;
+  }
+  .fx-target {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid rgba(78, 152, 198, 0.8);
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .fx-target::before,
+  .fx-target::after {
+    content: '';
+    position: absolute;
+    background: rgba(78, 152, 198, 0.7);
+  }
+  .fx-target::before {
+    width: 12px;
+    height: 1px;
+    left: 10px;
+    top: 16px;
+  }
+  .fx-target::after {
+    width: 1px;
+    height: 12px;
+    left: 16px;
+    top: 10px;
+  }
+  .fx-target--one {
+    left: 58%;
+    top: 28%;
+  }
+  .fx-target--two {
+    left: 38%;
+    top: 58%;
+  }
+  .process-step--analyse.is-active .fx-target {
+    animation: targetPop 0.7s ease 0.75s forwards;
+  }
+  .process-step--analyse.is-active .fx-target--two {
+    animation-delay: 1s;
   }
 
-  /* Vertraging per stap: op desktop een cadans (--i × 0.45s), op mobiel
-     0s want elke stap animeert los wanneer hij in beeld scrollt. */
-  .process-step {
-    --delay: 0s;
+  /* Bekabeling: draw overlay path */
+  .fx--cable {
+    width: 100%;
+    height: 100%;
   }
-  #process-flow.cascade .process-step {
-    --delay: calc(var(--i) * 0.45s);
+  .cable-shadow,
+  .cable-line {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 260;
+    stroke-dashoffset: 260;
+  }
+  .cable-shadow {
+    stroke: rgba(255, 255, 255, 0.88);
+    stroke-width: 5.5;
+  }
+  .cable-line {
+    stroke: #59aee0;
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 4px rgba(78, 152, 198, 0.45));
+  }
+  .process-step--bekabeling.is-active .cable-shadow,
+  .process-step--bekabeling.is-active .cable-line {
+    animation: drawCable 1.7s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
   }
 
-  /* ---- afspelen: getriggerd per stap via .animate ---- */
-  .process-step.animate {
-    animation: pf-step-in 0.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
-    animation-delay: var(--delay);
+  /* Apparatuur: product boot + LEDs */
+  .process-step--apparatuur .process-step__media img {
+    transform: scale(0.96);
+    filter: saturate(0.8) brightness(0.97);
+    transition:
+      transform 0.7s ease,
+      filter 0.7s ease;
   }
-  .process-step.animate .dot {
-    animation: pf-dot-fill 0.35s ease-out forwards;
-    animation-delay: calc(var(--delay) + 0.2s);
+  .process-step--apparatuur.is-active .process-step__media img {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
   }
-  .process-step.animate .dot::after {
-    animation: pf-ripple 0.9s ease-out forwards;
-    animation-delay: calc(var(--delay) + 0.2s);
+  .led {
+    position: absolute;
+    bottom: 45%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #79d3ff;
+    opacity: 0;
+    box-shadow: 0 0 9px #79d3ff;
   }
-  .process-step.animate .step-title {
-    animation: pf-title 0.35s ease-out forwards;
-    animation-delay: calc(var(--delay) + 0.2s);
+  .led--1 {
+    left: 43%;
   }
-  .process-step.animate .connector::after {
-    animation: pf-draw-x 0.45s ease-in-out forwards;
-    animation-delay: calc(var(--delay) + 0.35s);
+  .led--2 {
+    left: 47%;
   }
-  @media (max-width: 767px) {
-    .process-step.animate .connector::after {
-      animation-name: pf-draw-y;
+  .led--3 {
+    left: 51%;
+  }
+  .led--4 {
+    left: 55%;
+  }
+  .led--5 {
+    left: 59%;
+  }
+  .led--6 {
+    left: 63%;
+  }
+  .process-step--apparatuur.is-active .led {
+    animation: ledBoot 0.55s ease forwards;
+  }
+  .process-step--apparatuur.is-active .led--2 {
+    animation-delay: 0.1s;
+  }
+  .process-step--apparatuur.is-active .led--3 {
+    animation-delay: 0.2s;
+  }
+  .process-step--apparatuur.is-active .led--4 {
+    animation-delay: 0.3s;
+  }
+  .process-step--apparatuur.is-active .led--5 {
+    animation-delay: 0.4s;
+  }
+  .process-step--apparatuur.is-active .led--6 {
+    animation-delay: 0.5s;
+  }
+
+  /* Wifi: finite coverage ripples */
+  .wifi-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 36%;
+    aspect-ratio: 1;
+    border: 1.5px solid rgba(78, 152, 198, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.45);
+    opacity: 0;
+  }
+  .process-step--wifi.is-active .wifi-ring {
+    animation: wifiRipple 1.8s cubic-bezier(0.2, 0.65, 0.3, 1) 1;
+  }
+  .process-step--wifi.is-active .wifi-ring--2 {
+    animation-delay: 0.28s;
+  }
+  .process-step--wifi.is-active .wifi-ring--3 {
+    animation-delay: 0.56s;
+  }
+
+  /* Beheer: dashboard sweep + online indicator */
+  .screen-sweep {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -55%;
+    width: 34%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.32),
+      transparent
+    );
+    transform: skewX(-12deg);
+    opacity: 0;
+  }
+  .process-step--beheer.is-active .screen-sweep {
+    animation: screenSweep 1.35s ease 0.2s 1;
+  }
+  .online-dot {
+    position: absolute;
+    right: 10%;
+    bottom: 12%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #42b97b;
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(66, 185, 123, 0.35);
+  }
+  .process-step--beheer.is-active .online-dot {
+    animation: onlineIn 0.6s ease 0.85s forwards;
+  }
+
+  .process-step__status {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 12px 4px 0;
+    font-family: var(--font-mono);
+    color: var(--brand-strong);
+    font-size: 12.5px;
+    opacity: 0;
+    transform: translateY(5px);
+    transition:
+      opacity 0.45s ease 0.35s,
+      transform 0.45s ease 0.35s;
+  }
+  .process-step__status span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 0 4px rgba(78, 152, 198, 0.1);
+    flex: none;
+  }
+  .process-step.is-active .process-step__status {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .process-premium__final {
+    margin: 34px auto 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 16px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease;
+  }
+  .process-premium__final strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .process-premium__final.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @keyframes dataPulse {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
     }
   }
-  .process-step.animate .step-media {
-    animation: pf-media 0.5s ease-out forwards;
-    animation-delay: calc(var(--delay) + 0.3s);
+  @keyframes scanPass {
+    0% {
+      top: -24%;
+      opacity: 0;
+    }
+    18% {
+      opacity: 1;
+    }
+    82% {
+      opacity: 1;
+    }
+    100% {
+      top: 105%;
+      opacity: 0;
+    }
+  }
+  @keyframes targetPop {
+    0% {
+      opacity: 0;
+      transform: scale(0.65);
+    }
+    65% {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+    100% {
+      opacity: 0.92;
+      transform: scale(1);
+    }
+  }
+  @keyframes drawCable {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes ledBoot {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    55% {
+      opacity: 1;
+      transform: scale(1.35);
+    }
+    100% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+  }
+  @keyframes wifiRipple {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.38);
+    }
+    22% {
+      opacity: 0.75;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(2.1);
+    }
+  }
+  @keyframes screenSweep {
+    0% {
+      left: -55%;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      left: 125%;
+      opacity: 0;
+    }
+  }
+  @keyframes onlineIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.6);
+      box-shadow: 0 0 0 0 rgba(66, 185, 123, 0.35);
+    }
+    65% {
+      opacity: 1;
+      transform: scale(1.15);
+      box-shadow: 0 0 0 8px rgba(66, 185, 123, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
-  @keyframes pf-step-in {
-    to {
+  @media (max-width: 980px) {
+    .process-premium__timeline {
+      display: none;
+    }
+    .process-premium__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .process-step {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
+      gap: 18px;
+      align-items: center;
+      opacity: 1;
+      transform: none;
+    }
+    .process-step__head {
+      min-height: 0;
+    }
+    .process-step__status {
+      grid-column: 2;
+      margin-top: -8px;
+      opacity: 1;
+      transform: none;
+    }
+    .process-premium__final {
       opacity: 1;
       transform: none;
     }
   }
-  @keyframes pf-dot-fill {
-    to {
-      border-color: var(--color-brand-600);
-      background: var(--color-brand-600);
-      color: var(--color-white);
+
+  @media (max-width: 680px) {
+    .process-premium__inner {
+      width: min(100% - 28px, 1152px);
+      padding: 42px 0 48px;
     }
-  }
-  @keyframes pf-ripple {
-    0% {
-      opacity: 0;
-      transform: scale(0.7);
+    .process-step {
+      display: block;
+      padding-left: 14px;
+      border-left: 2px solid var(--line);
     }
-    30% {
-      opacity: 0.55;
+    .process-step.is-active {
+      border-left-color: var(--brand);
     }
-    100% {
-      opacity: 0;
-      transform: scale(1.7);
+    .process-step__head {
+      min-height: 0;
+      margin-bottom: 12px;
     }
-  }
-  @keyframes pf-title {
-    to {
-      color: var(--color-ink-950);
+    .process-step__media {
+      aspect-ratio: 16 / 10;
     }
-  }
-  @keyframes pf-draw-x {
-    to {
-      transform: scaleX(1);
-    }
-  }
-  @keyframes pf-draw-y {
-    to {
-      transform: scaleY(1);
-    }
-  }
-  @keyframes pf-media {
-    to {
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
-        0 10px 30px -12px rgba(10, 22, 32, 0.18);
+    .process-step__status {
+      margin: 10px 2px 0;
     }
   }
 
-  /* ---- fallback: reduced-motion → alles zichtbaar en in eindstaat ---- */
-  #process-flow.shown .process-step {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-  #process-flow.shown .dot {
-    border-color: var(--color-brand-600);
-    background: var(--color-brand-600);
-    color: var(--color-white);
-  }
-  #process-flow.shown .connector::after {
-    transform: none;
-  }
-  #process-flow.shown .step-media {
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-brand-500) 45%, transparent),
-      0 10px 30px -12px rgba(10, 22, 32, 0.18);
+  @media (prefers-reduced-motion: reduce) {
+    .process-premium *,
+    .process-premium *::before,
+    .process-premium *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+    .process-step {
+      opacity: 1;
+      transform: none;
+    }
+    .process-step__status,
+    .process-premium__final {
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>
-
-<script>
-  const flow = document.getElementById('process-flow');
-
-  if (flow && 'IntersectionObserver' in window) {
-    const reduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-
-    if (reduced) {
-      // Geen beweging: direct de eindstaat tonen.
-      flow.classList.add('shown');
-    } else {
-      flow.classList.add('ready'); // stappen verbergen tot ze animeren
-      const steps = Array.from(flow.querySelectorAll('.process-step'));
-      const desktop = window.matchMedia('(min-width: 768px)').matches;
-
-      if (desktop) {
-        // Eén georkestreerde cascade zodra de sectie in beeld komt.
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                flow.classList.add('cascade');
-                steps.forEach((s) => s.classList.add('animate'));
-                io.disconnect();
-              }
-            }
-          },
-          { threshold: 0, rootMargin: '0px 0px -20% 0px' }
-        );
-        io.observe(flow);
-      } else {
-        // Mobiel: elke stap animeert wanneer hij zelf in beeld scrollt
-        // (of al voorbij gescrolld is), zodat niets onzichtbaar blijft.
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
-                entry.target.classList.add('animate');
-                io.unobserve(entry.target);
-              }
-            }
-          },
-          { threshold: 0.3, rootMargin: '0px 0px -8% 0px' }
-        );
-        steps.forEach((s) => io.observe(s));
-      }
-    }
-  }
-</script>
