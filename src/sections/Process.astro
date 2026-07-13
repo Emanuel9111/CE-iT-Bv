@@ -51,8 +51,8 @@ const steps = [
     key: 'beheer',
     title: 'Beheer',
     text: 'We monitoren en beheren het netwerk op afstand en volgen snel op.',
-    image: 'images/step-beheer.png',
-    alt: 'Dashboard voor netwerkbeheer en monitoring',
+    image: 'images/service-beheer.jpg',
+    alt: 'Laptop met UniFi-dashboard voor netwerkbeheer, met serverrack op de achtergrond',
     status: 'Netwerk online · Beheerd door CE-iT',
   },
 ];
@@ -405,6 +405,10 @@ const steps = [
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+  /* De brede monitoring-foto: laptop als focuspunt houden in de crop */
+  .process-step--beheer .process-step__media img {
+    object-position: 58% 50%;
   }
   .fx {
     position: absolute;
