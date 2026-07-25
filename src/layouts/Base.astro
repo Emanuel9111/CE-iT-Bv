@@ -10,6 +10,11 @@ interface Props {
 
 const { title = site.seo.title, description = site.seo.description } =
   Astro.props;
+
+// Canonieke URL: vertelt Google dat ce-it.be en www.ce-it.be dezelfde
+// pagina zijn, zodat de autoriteit niet over twee adressen versplintert.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ce-it.be')
+  .href;
 ---
 
 <!doctype html>
@@ -19,9 +24,13 @@ const { title = site.seo.title, description = site.seo.description } =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="CE-iT Netwerkbeheer" />
+    <meta property="og:locale" content="nl_BE" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
     <script is:inline>
