@@ -109,20 +109,31 @@ const steps = [
                 </div>
               )}
 
+              {/*
+                Kabel-overlay: viewBox = pixels van step-bekabeling.png
+                (900×650) + preserveAspectRatio="slice" → de overlay wordt
+                exact zo bijgesneden als object-fit:cover, waardoor de lijn
+                écht op de kabel in de foto ligt, op elk schermformaat.
+                Route = de verticale stijgleiding (per pixelscan gemeten op
+                x≈412, bundel 403-421). Y blijft binnen 110-560: dat is de
+                zone die zowel in de 4/3- als de 16/10-crop zichtbaar is.
+              */}
               {step.key === 'bekabeling' && (
                 <svg
                   class="fx fx--cable"
-                  viewBox="0 0 100 72"
-                  preserveAspectRatio="none"
+                  viewBox="0 0 900 650"
+                  preserveAspectRatio="xMidYMid slice"
                   aria-hidden="true"
                 >
                   <path
                     class="cable-shadow"
-                    d="M11 66 C24 61 24 46 38 46 S52 28 62 28 S72 14 90 10"
+                    pathLength="1"
+                    d="M412 560 L412 110"
                   />
                   <path
                     class="cable-line"
-                    d="M11 66 C24 61 24 46 38 46 S52 28 62 28 S72 14 90 10"
+                    pathLength="1"
+                    d="M412 560 L412 110"
                   />
                 </svg>
               )}
@@ -487,17 +498,19 @@ const steps = [
     vector-effect: non-scaling-stroke;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-dasharray: 260;
-    stroke-dashoffset: 260;
+    /* pathLength=1 → tekenen werkt onafhankelijk van viewBox-schaal */
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
   }
+  /* Casing licht genoeg om de echte kabel eronder te laten meelezen */
   .cable-shadow {
-    stroke: rgba(255, 255, 255, 0.88);
-    stroke-width: 5.5;
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 6;
   }
   .cable-line {
-    stroke: #59aee0;
-    stroke-width: 2.2;
-    filter: drop-shadow(0 0 4px rgba(78, 152, 198, 0.45));
+    stroke: #6cc0f0;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px rgba(108, 192, 240, 0.6));
   }
   .process-step--bekabeling.is-active .cable-shadow,
   .process-step--bekabeling.is-active .cable-line {
