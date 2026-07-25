@@ -3,6 +3,7 @@ import Section from '../components/Section.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Button from '../components/Button.astro';
 import { site } from '../data/site';
+import { asset } from '../utils/paths';
 
 /**
  * Contactformulier via Web3Forms (https://web3forms.com — gratis).
@@ -150,7 +151,7 @@ const inputClasses =
         We gebruiken uw gegevens enkel om uw vraag te beantwoorden. Meer
         hierover in ons{' '}
         <a
-          href="/privacy"
+          href={`${asset("")}privacy`}
           class="underline underline-offset-2 hover:text-brand-600"
           >privacybeleid</a
         >.

@@ -7,12 +7,20 @@ import { asset } from '../utils/paths';
  * Sticky header (04-ANIMATION-SPEC §8):
  * top = ±78px, wit; na scroll = ±64px, blur + subtiele border.
  */
+/**
+ * Links wijzen naar de homepage + anker, niet naar een kaal anker.
+ * Op subpagina's (zoals /privacy) bestaan die ankers niet, waardoor de
+ * navigatie daar niets deed. Met het homepad ervoor werkt het overal:
+ * op de homepage scrollt de browser gewoon naar de sectie.
+ */
+const home = asset('');
+
 const links = [
-  { href: '#oplossingen', label: 'Oplossingen' },
-  { href: '#voor-wie', label: 'Voor wie' },
-  { href: '#werkwijze', label: 'Werkwijze' },
-  { href: '#over', label: 'Over CE-iT' },
-  { href: '#contact', label: 'Contact' },
+  { href: `${home}#oplossingen`, label: 'Oplossingen' },
+  { href: `${home}#voor-wie`, label: 'Voor wie' },
+  { href: `${home}#werkwijze`, label: 'Werkwijze' },
+  { href: `${home}#over`, label: 'Over CE-iT' },
+  { href: `${home}#contact`, label: 'Contact' },
 ];
 ---
 
@@ -24,7 +32,13 @@ const links = [
     class="mx-auto flex h-[78px] w-full max-w-6xl items-center justify-between gap-6 px-6 transition-[height] duration-200"
     aria-label="Hoofdnavigatie"
   >
-    <a href="#top" class="flex items-center" aria-label="CE-iT — naar boven">
+    {/* #top bestaat op de homepage → daar scrollt hij zacht naar boven;
+        vanaf /privacy navigeert hij netjes terug naar de homepage. */}
+    <a
+      href={`${home}#top`}
+      class="flex items-center"
+      aria-label="CE-iT — naar de homepage"
+    >
       <img
         src={asset('images/logo/ce-it-logo-wordmark.png')}
         alt="CE-iT"
@@ -52,7 +66,7 @@ const links = [
     </ul>
 
     <div class="flex items-center gap-3">
-      <Button href="#contact" size="sm" class="hidden sm:inline-flex">
+      <Button href={`${home}#contact`} size="sm" class="hidden sm:inline-flex">
         Plan een gesprek
       </Button>
       <button
@@ -100,7 +114,7 @@ const links = [
       }
     </ul>
     <div class="mt-4 px-3">
-      <Button href="#contact" class="w-full">Plan een gesprek</Button>
+      <Button href={`${home}#contact`} class="w-full">Plan een gesprek</Button>
     </div>
   </div>
 </header>

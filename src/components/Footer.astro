@@ -3,30 +3,36 @@
 import { site } from '../data/site';
 import { asset } from '../utils/paths';
 
+/**
+ * Ankers krijgen het homepad ervoor: op subpagina's (zoals /privacy)
+ * bestaan die secties niet, waardoor een kaal #anker daar niets deed.
+ */
+const home = asset('');
+
 const columns = [
   {
     title: 'Oplossingen',
     links: [
-      { label: 'Netwerk & wifi', href: '#oplossingen' },
-      { label: 'Bekabeling', href: '#oplossingen' },
-      { label: 'Netwerkbeheer', href: '#oplossingen' },
-      { label: 'Monitoring', href: '#oplossingen' },
+      { label: 'Netwerk & wifi', href: `${home}#oplossingen` },
+      { label: 'Bekabeling', href: `${home}#oplossingen` },
+      { label: 'Netwerkbeheer', href: `${home}#oplossingen` },
+      { label: 'Monitoring', href: `${home}#oplossingen` },
     ],
   },
   {
     title: 'Voor wie',
     links: [
-      { label: 'Studentenhuisvesting', href: '#voor-wie' },
-      { label: 'KMO’s & bedrijven', href: '#voor-wie' },
-      { label: 'Appartementsgebouwen', href: '#voor-wie' },
+      { label: 'Studentenhuisvesting', href: `${home}#voor-wie` },
+      { label: 'KMO’s & bedrijven', href: `${home}#voor-wie` },
+      { label: 'Appartementsgebouwen', href: `${home}#voor-wie` },
     ],
   },
   {
     title: 'Over CE-iT',
     links: [
-      { label: 'Over ons', href: '#over' },
-      { label: 'Werkwijze', href: '#werkwijze' },
-      { label: 'Contact', href: '#contact' },
+      { label: 'Over ons', href: `${home}#over` },
+      { label: 'Werkwijze', href: `${home}#werkwijze` },
+      { label: 'Contact', href: `${home}#contact` },
     ],
   },
 ];
@@ -199,14 +205,14 @@ const columns = [
       <ul class="-my-1 flex flex-wrap gap-x-5">
         <li>
           <a
-            href="/privacy"
+            href={`${home}privacy`}
             class="inline-block py-1.5 transition-colors hover:text-brand-600"
             >Privacybeleid</a
           >
         </li>
         <li>
           <a
-            href="/privacy#cookies"
+            href={`${home}privacy#cookies`}
             class="inline-block py-1.5 transition-colors hover:text-brand-600"
             >Cookies</a
           >
