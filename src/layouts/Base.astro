@@ -15,6 +15,12 @@ const { title = site.seo.title, description = site.seo.description } =
 // pagina zijn, zodat de autoriteit niet over twee adressen versplintert.
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ce-it.be')
   .href;
+
+// Deelvoorbeeld (LinkedIn, WhatsApp, Google) — absolute URL vereist.
+const ogImage = new URL(
+  asset('images/og-image.png'),
+  Astro.site ?? 'https://ce-it.be'
+).href;
 ---
 
 <!doctype html>
@@ -31,6 +37,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ce-it.be')
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="CE-iT Netwerkbeheer" />
     <meta property="og:locale" content="nl_BE" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="CE-iT Netwerkbeheer — netwerk, wifi en bekabeling voor gebouwen en KMO’s"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
     <script is:inline>
