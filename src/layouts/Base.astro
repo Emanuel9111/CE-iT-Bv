@@ -52,6 +52,9 @@ const organization = {
   ...(site.email ? { email: site.email } : {}),
   ...(site.phone ? { telephone: site.phone.replace(/\s/g, '') } : {}),
   ...(site.region ? { areaServed: site.region } : {}),
+  // sameAs koppelt dit domein aan het officiële LinkedIn-profiel, zodat
+  // Google beide als hetzelfde bedrijf herkent in plaats van als twee.
+  ...(site.linkedin ? { sameAs: [site.linkedin] } : {}),
 };
 ---
 

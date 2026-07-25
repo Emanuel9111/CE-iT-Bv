@@ -11,7 +11,8 @@ export const site = {
 
   phone: '+32 488 51 17 76',
   email: 'info@ce-it.be',
-  linkedin: '', // volledige URL van de LinkedIn-pagina (nog aan te vullen)
+  // Canonieke vorm zoals LinkedIn die zelf opgeeft in og:url.
+  linkedin: 'https://www.linkedin.com/company/ce-it-bv',
   yearsExperience: '10',
   region: 'Oost-Vlaanderen',
 
