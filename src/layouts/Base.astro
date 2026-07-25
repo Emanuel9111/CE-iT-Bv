@@ -21,6 +21,37 @@ const ogImage = new URL(
   asset('images/og-image.png'),
   Astro.site ?? 'https://ce-it.be'
 ).href;
+
+/**
+ * Gestructureerde gegevens: koppelt het CE-iT logo en de bedrijfsgegevens
+ * aan het domein, zodat Google weet welk logo bij dit bedrijf hoort.
+ * Alleen geverifieerde gegevens — niets verzinnen.
+ */
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  legalName: `${site.shortName} BV`,
+  url: 'https://ce-it.be',
+  logo: new URL(
+    asset('images/logo/ce-it-logo-full.png'),
+    Astro.site ?? 'https://ce-it.be'
+  ).href,
+  image: ogImage,
+  description: site.seo.description,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Sousbeekstraat 86',
+    postalCode: '9250',
+    addressLocality: 'Waasmunster',
+    addressRegion: 'Oost-Vlaanderen',
+    addressCountry: 'BE',
+  },
+  vatID: site.btw,
+  ...(site.email ? { email: site.email } : {}),
+  ...(site.phone ? { telephone: site.phone.replace(/\s/g, '') } : {}),
+  ...(site.region ? { areaServed: site.region } : {}),
+};
 ---
 
 <!doctype html>
@@ -47,7 +78,13 @@ const ogImage = new URL(
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#ffffff" />
-    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    {/* Iconen uit het originele CE-iT logo (48px is wat Google in de
+        zoekresultaten toont; 192/512 voor Android en snelkoppelingen) */}
+    <link rel="icon" type="image/png" sizes="48x48" href={asset('favicon-48.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={asset('favicon-192.png')} />
+    <link rel="icon" type="image/png" sizes="512x512" href={asset('favicon-512.png')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={asset('apple-touch-icon.png')} />
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
     <script is:inline>
       // Markeer dat JS beschikbaar is — scroll-reveal werkt alleen dan.
       document.documentElement.classList.add('js');
