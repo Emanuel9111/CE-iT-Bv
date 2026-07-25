@@ -26,7 +26,7 @@ const ul = 'mt-3 space-y-2 text-[15px] leading-relaxed text-ink-600';
   description="Hoe CE-iT Netwerkbeheer omgaat met uw persoonsgegevens: welke gegevens we verwerken, waarom, hoelang en welke rechten u heeft."
 >
   <Header />
-  <main>
+  <main id="main">
     <section class="bg-white">
       <div class="mx-auto w-full max-w-3xl px-6 pb-20 pt-12 md:pt-16">
         <p
@@ -187,10 +187,14 @@ const ul = 'mt-3 space-y-2 text-[15px] leading-relaxed text-ink-600';
           beleid aan. De datum bovenaan toont wanneer dat laatst gebeurde.
         </p>
 
+        {/* Losstaande link, dus niet vrijgesteld van de 24px-tikzone uit
+            WCAG 2.2 (de inline links in de lopende tekst hierboven wel).
+            Hover was brand-500: op wit maar 3,17:1. Onderstrepen geeft
+            hetzelfde signaal zonder het contrast te verliezen. */}
         <p class="mt-12">
           <a
             href="/"
-            class="text-[15px] font-medium text-brand-600 hover:text-brand-500"
+            class="-my-1.5 inline-block py-1.5 text-[15px] font-medium text-brand-600 hover:underline hover:underline-offset-4"
             >&larr; Terug naar de homepage</a
           >
         </p>

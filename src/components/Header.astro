@@ -15,10 +15,17 @@ import { asset } from '../utils/paths';
  */
 const home = asset('');
 
+/**
+ * De volgorde volgt de pagina van boven naar onder. Stond 'Oplossingen'
+ * eerder eerst, terwijl die sectie pas als derde komt: wie erop klikte
+ * sprong twee secties voorbij en moest daarna terug omhoog scrollen.
+ * Wil je 'Oplossingen' vooraan in het menu, verplaats dan de sectie in
+ * src/pages/index.astro — niet deze lijst.
+ */
 const links = [
-  { href: `${home}#oplossingen`, label: 'Oplossingen' },
   { href: `${home}#voor-wie`, label: 'Voor wie' },
   { href: `${home}#werkwijze`, label: 'Werkwijze' },
+  { href: `${home}#oplossingen`, label: 'Oplossingen' },
   { href: `${home}#over`, label: 'Over CE-iT' },
   { href: `${home}#contact`, label: 'Contact' },
 ];

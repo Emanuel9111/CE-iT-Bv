@@ -20,12 +20,20 @@
   --color-ink-900: #0f1922;
   --color-ink-800: #1a2730;
   --color-ink-600: #52616b;
-  --color-ink-500: #6f7e87;
+  /* Was #6f7e87 = 4,19:1 op wit, terwijl dit de kleur is van tekst van
+     11–15px (footer, formuliernotitie, labels, plaatshouders). WCAG AA
+     vraagt 4,5:1. Deze waarde haalt dat op élk licht vlak dat we
+     gebruiken: wit 5,12 · paper-25 4,98 · paper-50 4,79 · paper-100 4,53. */
+  --color-ink-500: #617079;
 
   /* Accent — CE-iT merkblauw (#4E98C6, uit het originele logo) is de
-     ENIGE accentkleur; brand-600 voor hover/sterke states. */
+     ENIGE accentkleur; brand-600 voor tekst/hover/sterke states.
+     brand-600 was #367daa: 4,4961:1 op wit en 4,21:1 op paper-50 — beide
+     onder de grens. Deze tint is nauwelijks donkerder en haalt 4,95:1 op
+     wit en 4,64:1 op paper-50 (die combinatie staat in het mobiele menu).
+     Wit op deze kleur, voor de knoppen, haalt 4,95:1. */
   --color-brand-500: #4e98c6;
-  --color-brand-600: #367daa;
+  --color-brand-600: #3376a0;
   --color-brand-100: #dcebf5;
   --color-brand-50: #f2f8fc;
 
@@ -42,6 +50,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* De header is sticky en 64px hoog zodra je scrolt. Zonder deze regel
+       landt een anker op y=0 en verdwijnt het begin van de sectie
+       erachter — het eyebrow-label was daardoor half afgesneden. */
+    scroll-padding-top: 5rem;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

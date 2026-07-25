@@ -299,11 +299,15 @@ const steps = [
 </script>
 
 <style>
+  /* Deze sectie had haar eigen hexcodes, los van de tokens in global.css.
+     Daardoor liep ze uit de pas: --brand-strong bleef op de oude #367daa
+     staan (4,50:1) en --muted op #647480 toen de tokens al aangescherpt
+     waren. Nu verwijzen ze naar de tokens, dus dat kan niet meer gebeuren. */
   .process-premium {
-    --brand: #4e98c6;
-    --brand-strong: #367daa;
-    --ink: #0f1922;
-    --muted: #647480;
+    --brand: var(--color-brand-500);
+    --brand-strong: var(--color-brand-600);
+    --ink: var(--color-ink-900);
+    --muted: var(--color-ink-500);
     --line: #d8e5ed;
     background: #fff;
     overflow: clip;

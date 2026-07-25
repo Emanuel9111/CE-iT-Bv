@@ -92,6 +92,35 @@ const organization = {
     </script>
   </head>
   <body>
+    {/* Wie met het toetsenbord navigeert, moest eerst door de hele
+        navigatie heen voor de inhoud begon. Deze link is onzichtbaar tot
+        hij focus krijgt. Doel: id="main", staat op elke pagina.
+        Expres eigen CSS en geen `sr-only focus:not-sr-only`: dat laat het
+        omschakelen afhangen van de volgorde waarin Tailwind de utilities
+        uitschrijft. Zo is het hier zwart op wit. */}
+    <a class="skip-link" href="#main">Naar de inhoud</a>
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+      }
+      .skip-link:focus {
+        left: 1rem;
+        top: 1rem;
+        z-index: 60;
+        border-radius: 0.375rem;
+        background: var(--color-white);
+        padding: 0.625rem 1rem;
+        font-family: var(--font-body);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--color-brand-600);
+        box-shadow: 0 10px 25px rgb(10 22 32 / 0.18);
+        outline: 2px solid var(--color-brand-600);
+        outline-offset: 2px;
+      }
+    </style>
     <slot />
     <script>
       // Standaard scroll-reveal (04-ANIMATION-SPEC §10).

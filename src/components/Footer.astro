@@ -64,8 +64,9 @@ const columns = [
               <li>
                 <a
                   href={site.linkedin}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="LinkedIn"
+                  aria-label="LinkedIn (opent in een nieuw tabblad)"
                   class="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-600"
                 >
                   <span class="font-mono text-[11px] font-medium">in</span>
@@ -203,16 +204,18 @@ const columns = [
         · BTW {site.btw}
       </p>
       <ul class="-my-1 flex flex-wrap gap-x-5">
+        {/* Mét slash op het einde: /privacy stuurt 301 door naar /privacy/,
+            dus dat kostte elke bezoeker een extra heen-en-weer. */}
         <li>
           <a
-            href={`${home}privacy`}
+            href={`${home}privacy/`}
             class="inline-block py-1.5 transition-colors hover:text-brand-600"
             >Privacybeleid</a
           >
         </li>
         <li>
           <a
-            href={`${home}privacy#cookies`}
+            href={`${home}privacy/#cookies`}
             class="inline-block py-1.5 transition-colors hover:text-brand-600"
             >Cookies</a
           >
