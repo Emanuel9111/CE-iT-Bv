@@ -15,9 +15,9 @@ export const site = {
   yearsExperience: '10',
   region: 'Oost-Vlaanderen',
 
-  // Web3Forms access key — gratis aan te maken op https://web3forms.com
-  // (e-mail invullen → key komt per mail). Zolang leeg: formulier inactief.
-  web3formsKey: '',
+  // Web3Forms access key (publiek bedoeld: staat in de form-HTML).
+  // Inzendingen komen binnen op info@ce-it.be.
+  web3formsKey: 'ae126825-aa39-41e4-8241-f054320152f8',
 
   seo: {
     title:
