@@ -185,63 +185,113 @@ const steps = [
   const section = document.querySelector('[data-process-premium]');
 
   if (section) {
-    const steps = Array.from(section.querySelectorAll('[data-process-step]'));
+    const steps = Array.from(
+      section.querySelectorAll<HTMLElement>('[data-process-step]')
+    );
     const progress = section.querySelector<HTMLElement>(
       '[data-process-progress]'
     );
-    const pulse = section.querySelector('[data-process-pulse]');
+    const pulse = section.querySelector<HTMLElement>('[data-process-pulse]');
     const finalMessage = section.querySelector('[data-process-final]');
     const reducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    let hasPlayed = false;
 
-    const activateAll = () => {
+    const STEP_MS = 1000; // cadans tussen de stappen
+    const TAIL_MS = 1800; // langste micro-animatie (kabel/wifi)
+    const REST_MS = 3200; // rust voordat de lus opnieuw begint
+    const CYCLE_MS = steps.length * STEP_MS + TAIL_MS + REST_MS;
+
+    let timers: number[] = [];
+    let cycleTimer: number | undefined;
+    let firstRunDone = false;
+
+    const clearTimers = () => {
+      timers.forEach((t) => window.clearTimeout(t));
+      timers = [];
+    };
+
+    /** Eindstaat: alles zichtbaar en 'af', zonder beweging. */
+    const settle = () => {
       steps.forEach((step) => step.classList.add('is-active'));
       progress?.style.setProperty('--progress', '100%');
-      pulse?.classList.add('is-active');
       finalMessage?.classList.add('is-visible');
     };
 
-    const play = () => {
-      if (hasPlayed) return;
-      hasPlayed = true;
+    /**
+     * Herstart alleen de micro-animaties van één stap. De stap zelf blijft
+     * 'is-active' — content verdwijnt dus nooit tussen twee cycli in.
+     */
+    const replayFx = (el: HTMLElement) => {
+      el.classList.remove('fx-run');
+      void el.offsetWidth; // reflow → animaties resetten
+      el.classList.add('fx-run');
+    };
 
-      if (reducedMotion) {
-        activateAll();
-        return;
-      }
+    const playCycle = (stageProgress: boolean) => {
+      clearTimers();
 
       steps.forEach((step, index) => {
-        window.setTimeout(() => {
-          step.classList.add('is-active');
-          const pct =
-            steps.length === 1 ? 100 : (index / (steps.length - 1)) * 100;
-          progress?.style.setProperty('--progress', `${pct}%`);
+        timers.push(
+          window.setTimeout(() => {
+            step.classList.add('is-active');
+            replayFx(step);
 
-          if (index === steps.length - 1) {
-            window.setTimeout(() => {
-              pulse?.classList.add('is-active');
-              finalMessage?.classList.add('is-visible');
-            }, 500);
-          }
-        }, index * 1000);
+            if (stageProgress) {
+              const pct =
+                steps.length === 1 ? 100 : (index / (steps.length - 1)) * 100;
+              progress?.style.setProperty('--progress', `${pct}%`);
+            }
+
+            if (index === steps.length - 1) {
+              timers.push(
+                window.setTimeout(() => {
+                  progress?.style.setProperty('--progress', '100%');
+                  if (pulse) replayFx(pulse);
+                  finalMessage?.classList.add('is-visible');
+                }, 500)
+              );
+            }
+          }, index * STEP_MS)
+        );
       });
+    };
+
+    const startLoop = () => {
+      playCycle(!firstRunDone);
+      firstRunDone = true;
+      window.clearInterval(cycleTimer);
+      cycleTimer = window.setInterval(() => playCycle(false), CYCLE_MS);
+    };
+
+    const stopLoop = () => {
+      clearTimers();
+      window.clearInterval(cycleTimer);
+      settle(); // buiten beeld: netjes in eindstaat parkeren
     };
 
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            play();
-            observer.disconnect();
+          const visible = entries.some((entry) => entry.isIntersecting);
+
+          if (reducedMotion) {
+            if (visible) {
+              settle();
+              observer.disconnect();
+            }
+            return;
           }
+
+          // Lus loopt alleen zolang de sectie in beeld is.
+          if (visible) startLoop();
+          else stopLoop();
         },
         { threshold: 0.15 }
       );
       observer.observe(section);
     } else {
-      activateAll();
+      settle();
     }
   }
 </script>
@@ -443,7 +493,7 @@ const steps = [
       transparent
     );
   }
-  .process-step--analyse.is-active .fx-scan {
+  .process-step--analyse.fx-run .fx-scan {
     animation: scanPass 1.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s 1;
   }
   .fx-target {
@@ -480,10 +530,10 @@ const steps = [
     left: 38%;
     top: 58%;
   }
-  .process-step--analyse.is-active .fx-target {
+  .process-step--analyse.fx-run .fx-target {
     animation: targetPop 0.7s ease 0.75s forwards;
   }
-  .process-step--analyse.is-active .fx-target--two {
+  .process-step--analyse.fx-run .fx-target--two {
     animation-delay: 1s;
   }
 
@@ -512,8 +562,8 @@ const steps = [
     stroke-width: 3;
     filter: drop-shadow(0 0 5px rgba(108, 192, 240, 0.6));
   }
-  .process-step--bekabeling.is-active .cable-shadow,
-  .process-step--bekabeling.is-active .cable-line {
+  .process-step--bekabeling.fx-run .cable-shadow,
+  .process-step--bekabeling.fx-run .cable-line {
     animation: drawCable 1.7s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
   }
 
@@ -557,22 +607,22 @@ const steps = [
   .led--6 {
     left: 63%;
   }
-  .process-step--apparatuur.is-active .led {
+  .process-step--apparatuur.fx-run .led {
     animation: ledBoot 0.55s ease forwards;
   }
-  .process-step--apparatuur.is-active .led--2 {
+  .process-step--apparatuur.fx-run .led--2 {
     animation-delay: 0.1s;
   }
-  .process-step--apparatuur.is-active .led--3 {
+  .process-step--apparatuur.fx-run .led--3 {
     animation-delay: 0.2s;
   }
-  .process-step--apparatuur.is-active .led--4 {
+  .process-step--apparatuur.fx-run .led--4 {
     animation-delay: 0.3s;
   }
-  .process-step--apparatuur.is-active .led--5 {
+  .process-step--apparatuur.fx-run .led--5 {
     animation-delay: 0.4s;
   }
-  .process-step--apparatuur.is-active .led--6 {
+  .process-step--apparatuur.fx-run .led--6 {
     animation-delay: 0.5s;
   }
 
@@ -588,13 +638,13 @@ const steps = [
     transform: translate(-50%, -50%) scale(0.45);
     opacity: 0;
   }
-  .process-step--wifi.is-active .wifi-ring {
+  .process-step--wifi.fx-run .wifi-ring {
     animation: wifiRipple 1.8s cubic-bezier(0.2, 0.65, 0.3, 1) 1;
   }
-  .process-step--wifi.is-active .wifi-ring--2 {
+  .process-step--wifi.fx-run .wifi-ring--2 {
     animation-delay: 0.28s;
   }
-  .process-step--wifi.is-active .wifi-ring--3 {
+  .process-step--wifi.fx-run .wifi-ring--3 {
     animation-delay: 0.56s;
   }
 
@@ -614,7 +664,7 @@ const steps = [
     transform: skewX(-12deg);
     opacity: 0;
   }
-  .process-step--beheer.is-active .screen-sweep {
+  .process-step--beheer.fx-run .screen-sweep {
     animation: screenSweep 1.35s ease 0.2s 1;
   }
   .online-dot {
@@ -628,7 +678,7 @@ const steps = [
     opacity: 0;
     box-shadow: 0 0 0 0 rgba(66, 185, 123, 0.35);
   }
-  .process-step--beheer.is-active .online-dot {
+  .process-step--beheer.fx-run .online-dot {
     animation: onlineIn 0.6s ease 0.85s forwards;
   }
 
