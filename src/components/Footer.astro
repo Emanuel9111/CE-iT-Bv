@@ -96,12 +96,14 @@ const columns = [
       columns.map((col) => (
         <nav aria-label={col.title}>
           <p class="text-[14px] font-semibold text-ink-950">{col.title}</p>
-          <ul class="mt-4 space-y-2.5">
+          {/* Ruime tikzones: op een telefoon zijn links van 17px niet
+              betrouwbaar te raken. Negatieve marge houdt de uitlijning. */}
+          <ul class="mt-3 space-y-0.5">
             {col.links.map((link) => (
               <li>
                 <a
                   href={link.href}
-                  class="text-[13.5px] text-ink-600 transition-colors hover:text-brand-600"
+                  class="-mx-2 inline-block rounded px-2 py-2 text-[13.5px] text-ink-600 transition-colors hover:text-brand-600"
                 >
                   {link.label}
                 </a>
@@ -131,7 +133,7 @@ const columns = [
               </svg>
               <a
                 href={`tel:${site.phone.replace(/\s/g, '')}`}
-                class="hover:text-brand-600"
+                class="-my-1 inline-block py-1.5 hover:text-brand-600"
               >
                 {site.phone}
               </a>
@@ -152,7 +154,10 @@ const columns = [
                 <rect x="2.5" y="4.5" width="15" height="11" rx="1.5" />
                 <path d="m3 6 7 5 7-5" />
               </svg>
-              <a href={`mailto:${site.email}`} class="hover:text-brand-600">
+              <a
+                href={`mailto:${site.email}`}
+                class="-my-1 inline-block py-1.5 hover:text-brand-600"
+              >
                 {site.email}
               </a>
             </li>
@@ -191,9 +196,21 @@ const columns = [
         © {site.shortName} Netwerkbeheer · {site.shortName} BV · {site.address}
         · BTW {site.btw}
       </p>
-      <ul class="flex flex-wrap gap-x-5 gap-y-1">
-        <li><span title="Pagina volgt">Privacyverklaring</span></li>
-        <li><span title="Pagina volgt">Cookiebeleid</span></li>
+      <ul class="-my-1 flex flex-wrap gap-x-5">
+        <li>
+          <a
+            href="/privacy"
+            class="inline-block py-1.5 transition-colors hover:text-brand-600"
+            >Privacybeleid</a
+          >
+        </li>
+        <li>
+          <a
+            href="/privacy#cookies"
+            class="inline-block py-1.5 transition-colors hover:text-brand-600"
+            >Cookies</a
+          >
+        </li>
       </ul>
     </div>
   </div>

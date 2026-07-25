@@ -1,0 +1,201 @@
+---
+/**
+ * Privacybeleid (GDPR/AVG). De inhoud beschrijft wat de site
+ * daadwerkelijk doet — geverifieerd op de live site: geen cookies, geen
+ * lokale opslag, geen externe verzoeken (lettertypes staan lokaal).
+ * Enige persoonsgegevens komen uit het contactformulier.
+ *
+ * LET OP: dit is een zorgvuldige opzet, geen juridisch nagekeken tekst.
+ * Emanuel controleert de bewaartermijn en de verwerkersvoorwaarden van
+ * Web3Forms en Neo voordat dit als definitief geldt.
+ */
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+const laatstBijgewerkt = '25 juli 2026';
+
+const h2 = 'mt-10 font-display text-[20px] font-semibold tracking-tight text-ink-950';
+const p = 'mt-3 text-[15px] leading-relaxed text-ink-600';
+const ul = 'mt-3 space-y-2 text-[15px] leading-relaxed text-ink-600';
+---
+
+<Base
+  title="Privacybeleid — CE-iT Netwerkbeheer"
+  description="Hoe CE-iT Netwerkbeheer omgaat met uw persoonsgegevens: welke gegevens we verwerken, waarom, hoelang en welke rechten u heeft."
+>
+  <Header />
+  <main>
+    <section class="bg-white">
+      <div class="mx-auto w-full max-w-3xl px-6 pb-20 pt-12 md:pt-16">
+        <p
+          class="font-mono text-[13px] font-medium uppercase tracking-[0.16em] text-brand-600"
+        >
+          Privacy
+        </p>
+        <h1
+          class="mt-3 font-display text-[30px] font-semibold leading-tight tracking-tight text-ink-950 md:text-[38px]"
+        >
+          Privacybeleid
+        </h1>
+        <p class="mt-4 text-[15px] text-ink-500">
+          Laatst bijgewerkt: {laatstBijgewerkt}
+        </p>
+
+        <p class={p}>
+          CE-iT hecht belang aan uw privacy. Deze pagina legt uit welke
+          persoonsgegevens wij verwerken wanneer u onze website bezoekt of
+          contact met ons opneemt, waarom we dat doen en welke rechten u
+          heeft. We houden het bewust kort en concreet.
+        </p>
+
+        <h2 class={h2}>Wie is verantwoordelijk?</h2>
+        <p class={p}>
+          {site.shortName} BV, {site.address}, België.<br />
+          Ondernemingsnummer / btw: {site.btw}.<br />
+          {
+            site.email && (
+              <>
+                E-mail: <a class="text-brand-600 underline underline-offset-2" href={`mailto:${site.email}`}>{site.email}</a><br />
+              </>
+            )
+          }
+          {
+            site.phone && (
+              <>Telefoon: <a class="text-brand-600 underline underline-offset-2" href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></>
+            )
+          }
+        </p>
+
+        <h2 class={h2}>Welke gegevens verwerken wij?</h2>
+        <p class={p}>
+          Wij verzamelen alleen gegevens die u zelf aan ons doorgeeft via
+          het contactformulier of wanneer u ons belt of mailt:
+        </p>
+        <ul class={ul}>
+          <li>· naam</li>
+          <li>· bedrijf of organisatie (optioneel)</li>
+          <li>· e-mailadres</li>
+          <li>· telefoonnummer (optioneel)</li>
+          <li>· type gebouw en locatie (optioneel)</li>
+          <li>· de inhoud van uw bericht</li>
+        </ul>
+        <p class={p}>
+          Wij vragen niet naar gevoelige gegevens en verwachten die ook niet
+          in uw bericht.
+        </p>
+
+        <h2 class={h2}>Waarvoor gebruiken wij ze?</h2>
+        <p class={p}>
+          Uitsluitend om uw vraag te beantwoorden, een afspraak te maken en
+          eventueel een voorstel op te maken. De rechtsgrond is de
+          uitvoering van of voorbereiding op een overeenkomst (artikel 6.1.b
+          AVG) en ons gerechtvaardigd belang om op vragen te antwoorden
+          (artikel 6.1.f AVG). Wij gebruiken uw gegevens niet voor reclame
+          en verkopen ze niet door.
+        </p>
+
+        <h2 class={h2}>Hoelang bewaren wij ze?</h2>
+        <p class={p}>
+          Aanvragen die niet tot een opdracht leiden, bewaren wij maximaal
+          twee jaar. Leidt uw aanvraag tot een samenwerking, dan gelden de
+          wettelijke bewaartermijnen voor facturatie en administratie
+          (in België doorgaans zeven jaar).
+        </p>
+
+        <h2 class={h2}>Wie krijgt uw gegevens te zien?</h2>
+        <p class={p}>
+          Alleen CE-iT. Om de website te laten werken, doen wij een beroep
+          op enkele dienstverleners die daarbij gegevens verwerken:
+        </p>
+        <ul class={ul}>
+          <li>
+            · <strong class="font-medium text-ink-800">Web3Forms</strong> —
+            verwerkt de inzending van het contactformulier en stuurt die
+            als e-mail door.
+          </li>
+          <li>
+            · <strong class="font-medium text-ink-800">Neo (Titan)</strong> —
+            onze e-maildienst, waar uw bericht binnenkomt.
+          </li>
+          <li>
+            · <strong class="font-medium text-ink-800">GitHub Pages</strong> —
+            hosting van deze website.
+          </li>
+          <li>
+            · <strong class="font-medium text-ink-800">Cloudflare</strong> —
+            beheer van het domeinnaamsysteem (DNS).
+          </li>
+        </ul>
+        <p class={p}>
+          Sommige van deze diensten zijn gevestigd buiten de Europese
+          Economische Ruimte. Waar dat het geval is, gebeurt de doorgifte op
+          basis van de standaardbepalingen van de Europese Commissie of een
+          gelijkwaardige waarborg.
+        </p>
+
+        <h2 id="cookies" class={h2}>Cookies</h2>
+        <p class={p}>
+          Deze website plaatst <strong class="font-medium text-ink-800">geen
+          cookies</strong> en gebruikt geen lokale opslag in uw browser. Er
+          draaien geen analyse- of trackingscripts en er worden geen
+          gegevens naar externe partijen gestuurd bij het bekijken van de
+          site — ook de lettertypes staan op onze eigen server. Daarom
+          krijgt u geen cookiemelding: er valt niets toe te staan of te
+          weigeren.
+        </p>
+        <p class={p}>
+          Wanneer u het contactformulier verstuurt, worden de door u
+          ingevulde gegevens uiteraard wel verzonden. Dat gebeurt alleen op
+          het moment dat u zelf op verzenden klikt.
+        </p>
+
+        <h2 class={h2}>Uw rechten</h2>
+        <p class={p}>U heeft het recht om:</p>
+        <ul class={ul}>
+          <li>· uw gegevens in te zien;</li>
+          <li>· ze te laten verbeteren of aanvullen;</li>
+          <li>· ze te laten wissen;</li>
+          <li>· de verwerking te laten beperken;</li>
+          <li>· bezwaar te maken tegen de verwerking;</li>
+          <li>· uw gegevens in een gangbaar formaat te ontvangen.</li>
+        </ul>
+        <p class={p}>
+          Een eenvoudig bericht {site.email ? 'aan ' : ''}
+          {
+            site.email && (
+              <a class="text-brand-600 underline underline-offset-2" href={`mailto:${site.email}`}>{site.email}</a>
+            )
+          } volstaat. Wij reageren binnen één maand.
+        </p>
+        <p class={p}>
+          Bent u niet tevreden over hoe wij met uw gegevens omgaan, dan kunt
+          u klacht indienen bij de Belgische Gegevensbeschermingsautoriteit,
+          Drukpersstraat 35, 1000 Brussel —
+          <a
+            class="text-brand-600 underline underline-offset-2"
+            href="https://www.gegevensbeschermingsautoriteit.be"
+            rel="noopener noreferrer"
+            target="_blank">gegevensbeschermingsautoriteit.be</a
+          >.
+        </p>
+
+        <h2 class={h2}>Wijzigingen</h2>
+        <p class={p}>
+          Verandert de manier waarop deze website werkt, dan passen wij dit
+          beleid aan. De datum bovenaan toont wanneer dat laatst gebeurde.
+        </p>
+
+        <p class="mt-12">
+          <a
+            href="/"
+            class="text-[15px] font-medium text-brand-600 hover:text-brand-500"
+            >&larr; Terug naar de homepage</a
+          >
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
