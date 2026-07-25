@@ -9,12 +9,12 @@ import { site } from '../data/site';
 /**
  * Over CE-iT. Productie-schoon: de zin met jaren/regio en de foto
  * verschijnen pas wanneer de echte gegevens/het echte beeld er zijn
- * (src/data/site.ts + /public/images/emanuel-terrein.jpg).
+ * (src/data/site.ts + assets/originals/emanuel-terrein.jpg → `npm run images`).
  */
 const photoExists = fs.existsSync(
-  path.join(process.cwd(), 'public', 'images', 'emanuel-terrein.jpg')
+  path.join(process.cwd(), 'public', 'images', 'emanuel-terrein.webp')
 );
-const photoSrc = asset('images/emanuel-terrein.jpg');
+const photoSrc = asset('images/emanuel-terrein.webp');
 const hasExperienceLine = Boolean(site.yearsExperience || site.region);
 ---
 

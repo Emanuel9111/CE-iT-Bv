@@ -7,31 +7,32 @@ import SmartImage from '../components/SmartImage.astro';
  * Recente projecten — ALLEEN echte projecten van CE-iT (design brief §7G).
  * Namen, plaatsen en aantallen worden door Emanuel aangeleverd —
  * NOOIT verzinnen. Tot dan: duidelijke plaatshouders.
- * Foto's verschijnen automatisch zodra de bestanden in /public/images/ staan.
+ * Foto's verschijnen automatisch zodra ze in assets/originals/ staan en
+ * `npm run images` gelopen heeft (dat schrijft de .webp in public/images/).
  */
 const projects = [
   {
     title: '[PROJECT 1 — type + plaats]',
     chip: '[X kamers]',
-    file: 'project-studenten-01.jpg',
+    file: 'project-studenten-01.webp',
     label: 'gebouw/installatie',
   },
   {
     title: '[PROJECT 2 — type + plaats]',
     chip: '[X appartementen]',
-    file: 'project-rack-01.jpg',
+    file: 'project-rack-01.webp',
     label: 'patchkast / rack',
   },
   {
     title: '[PROJECT 3 — type + plaats]',
     chip: '[kantoor]',
-    file: 'project-kmo-01.jpg',
+    file: 'project-kmo-01.webp',
     label: 'AP-installatie',
   },
   {
     title: '[PROJECT 4 — type + plaats]',
     chip: '[X kamers]',
-    file: 'project-bekabeling-01.jpg',
+    file: 'project-bekabeling-01.webp',
     label: 'bekabeling',
   },
 ];

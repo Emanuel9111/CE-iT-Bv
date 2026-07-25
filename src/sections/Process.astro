@@ -15,7 +15,7 @@ const steps = [
     key: 'analyse',
     title: 'Analyse',
     text: 'We bekijken uw gebouw, uw infrastructuur en wat uw gebruikers nodig hebben.',
-    image: 'images/step-analyse.png',
+    image: 'images/step-analyse.webp',
     alt: 'Analyse van een gebouw en de bestaande infrastructuur',
     status: 'Analyse uitgevoerd',
   },
@@ -24,7 +24,7 @@ const steps = [
     key: 'bekabeling',
     title: 'Bekabeling',
     text: 'Professionele structurele bekabeling op de juiste plaatsen, in elke ruimte.',
-    image: 'images/step-bekabeling.png',
+    image: 'images/step-bekabeling.webp',
     alt: 'Structurele bekabeling die door een gebouw naar de patchkast loopt',
     status: 'Bekabeling geoptimaliseerd',
   },
@@ -33,7 +33,7 @@ const steps = [
     key: 'apparatuur',
     title: 'Apparatuur',
     text: 'We installeren en configureren gateway, switches en netwerkcomponenten.',
-    image: 'images/step-apparatuur.png',
+    image: 'images/step-apparatuur.webp',
     alt: 'Professionele netwerkswitch',
     status: 'Apparatuur actief',
   },
@@ -42,7 +42,7 @@ const steps = [
     key: 'wifi',
     title: 'Wifi',
     text: 'Access points op de juiste plaatsen voor stabiele en consistente dekking.',
-    image: 'images/step-wifi.png',
+    image: 'images/step-wifi.webp',
     alt: 'Access point met wifi-dekking aan een plafond',
     status: 'Dekking geactiveerd',
   },
@@ -51,7 +51,7 @@ const steps = [
     key: 'beheer',
     title: 'Beheer',
     text: 'We monitoren en beheren het netwerk op afstand en volgen snel op.',
-    image: 'images/service-beheer.jpg',
+    image: 'images/service-beheer.webp',
     alt: 'Laptop met UniFi-dashboard voor netwerkbeheer, met serverrack op de achtergrond',
     status: 'Netwerk online · Beheerd door CE-iT',
   },
@@ -94,10 +94,12 @@ const steps = [
             </div>
 
             <div class="process-step__media">
+              {/* Deze sectie staat ver onder de fold: alles lazy. Eager
+                  laden kostte 1,3 MB voordat de bezoeker hier ooit kwam. */}
               <img
                 src={asset(step.image)}
                 alt={step.alt}
-                loading={index < 2 ? 'eager' : 'lazy'}
+                loading="lazy"
                 decoding="async"
               />
 

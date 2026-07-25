@@ -1,36 +1,18 @@
-# Echte beelden — aan te leveren door Emanuel
+# Gegenereerde map — niet met de hand bewerken
 
-GEEN stockfoto's (zie docs/01-DESIGN-BRIEF.md §8). Verwachte bestanden (v2):
+Alles hier wordt gemaakt door `npm run images` uit de originelen in
+[`assets/originals/`](../../assets/originals/README.md). Bewerk je een
+bestand hier, dan is die wijziging weg bij de volgende run.
 
-| Bestand | Wat | Gebruikt in |
-|---|---|---|
-| `hero-building.png` | gebouwrender (AI-concept of eigen visual) | Hero |
-| `studentenhuisvesting-hero.jpg` | studentenkot / studentenresidentie | Voor wie |
-| `kmo-hero.jpg` | professioneel kantoor / bedrijfspand | Voor wie |
-| `project-studenten-01.jpg` | studentengebouw | Projecten |
-| `project-bekabeling-01.jpg` | nette bekabeling | Projecten |
-| `project-kmo-01.jpg` | kantoorproject | Projecten |
-| `project-rack-01.jpg` | patchkast / rack | Projecten |
-| `emanuel-terrein.jpg` | Emanuel op locatie (staand formaat) | Over CE-iT |
-| `unifi-gateway.png` | UniFi gateway (eigen foto of officieel beeld met licentie) | UniFi-sectie |
-| `unifi-switch.png` | UniFi switch | UniFi-sectie |
-| `unifi-ap.png` | UniFi access point | UniFi-sectie |
-| `service-netwerk-wifi.jpg` | TIJDELIJK neutraal servicebeeld (geen CE-iT-project) — vervangen door eigen foto | Wat we doen |
-| `service-bekabeling.jpg` | TIJDELIJK neutraal servicebeeld (geen CE-iT-project) — vervangen door eigen foto | Wat we doen |
-| `service-beheer.jpg` | TIJDELIJK neutraal servicebeeld (geen CE-iT-project) — vervangen door eigen foto | Wat we doen |
-| `step-analyse.png` | gebouw/plan/inspectie | Werkwijze stap 01 |
-| `step-bekabeling.png` | gestructureerde bekabeling | Werkwijze stap 02 |
-| `step-apparatuur.png` | gateway/switch/rack | Werkwijze stap 03 |
-| `step-wifi.png` | AP aan plafond | Werkwijze stap 04 |
-| `step-beheer.png` | dashboard/monitoring | Werkwijze stap 05 |
-| `logo/ce-it-logo-full.png` | origineel logo met tagline (uit CE-it-logo.pdf) | Footer |
-| `logo/ce-it-logo-wordmark.png` | logo zonder tagline | Header |
+De uitvoer staat wél in git: de CI-build (`withastro/action`) kopieert deze
+map alleen maar, zodat de build snel blijft en geen sharp nodig heeft.
 
-Video (map `/public/video/`):
+Formaten: `.webp` voor foto's en renders, palette-`.png` voor de logo's
+(daar is PNG kleiner dan WebP), `.jpg` voor `og-image` omdat social
+crawlers niet betrouwbaar met WebP omgaan.
 
-| Bestand | Wat |
-|---|---|
-| `network-build-sequence.mp4` | 8–15s: kabel in switch / rack detail / AP-installatie — stabiel, goed belicht |
+Controleren of de map bij de originelen past:
 
-Kwaliteitseisen: goed licht, opgeruimd kader, geordende kabels.
-Een slechte echte foto wekt mínder vertrouwen dan een placeholder.
+```sh
+npm run images -- --check
+```

@@ -1,8 +1,8 @@
 ---
 /**
- * Toont de echte afbeelding uit /public/images/ zodra het bestand bestaat;
- * anders een duidelijke plaatshouder. Zo verschijnen foto's automatisch
- * van zodra Emanuel ze (met de juiste bestandsnaam) in de map zet.
+ * Toont de geoptimaliseerde afbeelding uit /public/images/ zodra het bestand
+ * bestaat; anders een duidelijke plaatshouder. Die bestanden worden gemaakt
+ * door `npm run images` uit de originelen in assets/originals/.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,7 +10,7 @@ import PlaceholderImage from './PlaceholderImage.astro';
 import { asset } from '../utils/paths';
 
 interface Props {
-  file: string; // bestandsnaam in /public/images/, bv. "kmo-hero.jpg"
+  file: string; // bestandsnaam in /public/images/, bv. "kmo-hero.webp"
   alt: string;
   label?: string;
   kind?: 'foto' | 'video' | 'product';

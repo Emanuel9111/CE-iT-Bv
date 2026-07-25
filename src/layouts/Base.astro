@@ -17,8 +17,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ce-it.be')
   .href;
 
 // Deelvoorbeeld (LinkedIn, WhatsApp, Google) — absolute URL vereist.
+// JPEG, geen WebP: social crawlers gaan daar niet betrouwbaar mee om.
 const ogImage = new URL(
-  asset('images/og-image.png'),
+  asset('images/og-image.jpg'),
   Astro.site ?? 'https://ce-it.be'
 ).href;
 

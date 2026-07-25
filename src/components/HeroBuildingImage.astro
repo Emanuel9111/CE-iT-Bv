@@ -46,9 +46,9 @@ const aps = [
 const floorYs = [150, 400, 652, 897];
 
 const exists = fs.existsSync(
-  path.join(process.cwd(), 'public', 'images', 'hero-building.png')
+  path.join(process.cwd(), 'public', 'images', 'hero-building.webp')
 );
-const src = asset('images/hero-building.png');
+const src = asset('images/hero-building.webp');
 ---
 
 <div class="hbi grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-5" id="hero-visual">
@@ -214,7 +214,7 @@ const src = asset('images/hero-building.png');
         </>
       ) : (
         <span class="absolute inset-0 flex items-center justify-center rounded-xl border border-dashed border-line bg-paper-50 px-8 text-center font-mono text-[12px] text-ink-500">
-          [RENDER: gebouw &rarr; /public/images/hero-building.png]
+          [RENDER: gebouw &rarr; /public/images/hero-building.webp]
         </span>
       )
     }
